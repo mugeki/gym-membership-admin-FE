@@ -8,11 +8,7 @@ export default function AddClassModal(props) {
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
 		>
-			<Modal.Header closeButton>
-				<Modal.Title id="contained-modal-title-vcenter">
-					Modal heading
-				</Modal.Title>
-			</Modal.Header>
+			<Modal.Header closeButton></Modal.Header>
 			<Modal.Body>
 				<Form>
 					<Form.Group className="mb-3" controlId="formBasicName">
@@ -50,14 +46,14 @@ export default function AddClassModal(props) {
 						<Form.Control type="date" placeholder="Date" />
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="formBasicPrice">
-						<Form.Label>Price</Form.Label>
-						<Form.Control type="price" placeholder="Price" />
+					<Form.Group className="mb-3" controlId="formBasicAttend">
+						<Form.Label>Attend</Form.Label>
+						<Form.Control type="attend" placeholder="Attend" />
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="formBasicDate">
-						<Form.Label>Date</Form.Label>
-						<Form.Control type="date" placeholder="Date" />
+					<Form.Group className="mb-3" controlId="formBasicImagee">
+						<Form.Label>Image</Form.Label>
+						<Form.Control type="file" placeholder="Image" />
 					</Form.Group>
 
 					<Button variant="primary" type="submit">
