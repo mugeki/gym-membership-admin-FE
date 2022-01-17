@@ -1,18 +1,29 @@
 import Layout from "../../components/Layout";
-import {
-	Form,
-	FormControl,
-	Dropdown,
-	DropdownButton,
-	ButtonGroup,
-} from "react-bootstrap";
+import { Form, FormControl, Button } from "react-bootstrap";
+import { useState } from "react";
+import AddClassModal from "../../components/elements/addClassModal";
 
-export default function Transactions() {
+export default function Classes() {
+	const [modalShow, setModalShow] = useState(false);
+	// const [editShow, setEditShow] = useState(false);
+	// const onClick = () => {
+	// 	setEditShow(true);
+	// };
+	const onClick = () => {
+		setModalShow(true);
+	};
+
 	return (
 		<Layout>
+			<AddClassModal show={modalShow} onHide={() => setModalShow(false)} />
+
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
-				<h1 className="text-end">Transactions</h1>
-				<div className="d-flex p-1 justify-content-end">
+				<h1 className="text-end">Classes</h1>
+				<div className="d-flex p-1 justify-content-between">
+					<Button variant="primary" onClick={onClick}>
+						Add
+					</Button>
+
 					<Form className="d-flex">
 						<FormControl
 							type="search"
@@ -21,27 +32,21 @@ export default function Transactions() {
 							aria-label="Search"
 						/>
 					</Form>
-					<DropdownButton
-						as={ButtonGroup}
-						title="Status"
-						id="bg-nested-dropdown"
-					>
-						<Dropdown.Item eventKey="1">status</Dropdown.Item>
-						<Dropdown.Item eventKey="2">status</Dropdown.Item>
-					</DropdownButton>
 				</div>
 
 				<div className="d-flex">
 					<table className="table flex-column">
 						<thead className="table-primary flex-column">
 							<tr>
-								<th>ID</th>
 								<th>Name</th>
-								<th>Class</th>
+								<th>Type</th>
+								<th>Slot</th>
+								<th>Trainer</th>
+								<th>Location</th>
+								<th>Price</th>
 								<th>Date</th>
-								<th>Payment</th>
-								<th>Receipt</th>
-								<th>Status</th>
+								<th>Attendant</th>
+								<th>Image</th>
 							</tr>
 						</thead>
 						<tbody className="flex-column">
@@ -51,9 +56,12 @@ export default function Transactions() {
 								<td>Cell</td>
 								<td>Cell</td>
 								<td>Cell</td>
-								<td>View</td>
 								<td>Cell</td>
-								<td onClick>Confirm</td>
+								<td>Cell</td>
+								<td>Cell</td>
+								<td>Cell</td>
+								<td onClick>edit</td>
+								<td onClick>delete</td>
 							</tr>
 						</tbody>
 					</table>
