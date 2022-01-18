@@ -12,8 +12,8 @@ module.exports = {
 	async redirects() {
 		return [
 			{
-				source: "/",
-				destination: "/transactions",
+				source: "/transactions",
+				destination: "/transactions/classes",
 				permanent: true,
 			},
 		];

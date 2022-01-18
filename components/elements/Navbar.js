@@ -4,6 +4,7 @@ import {
 	ProSidebar,
 	SidebarHeader,
 	SidebarContent,
+	SubMenu,
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import "../../styles/Navbar.module.css";
@@ -53,7 +54,7 @@ export default function Navbar({ toggled, onToggleSidebar }) {
 					</p>
 				</div>
 			</SidebarHeader>
-			<SidebarContent className="py-4">
+			<SidebarContent className="py-4 h-100">
 				<Menu iconShape="circle">
 					<MenuItem
 						active={router.pathname === "/admins"}
@@ -85,12 +86,14 @@ export default function Navbar({ toggled, onToggleSidebar }) {
 					>
 						<Link href={"/newsletters"}>Newsletters</Link>
 					</MenuItem>
-					<MenuItem
-						active={router.pathname === "/transactions"}
-						icon={<Icon icon="carbon:receipt" />}
-					>
-						<Link href={"/transactions"}>Transactions</Link>
-					</MenuItem>
+					<SubMenu title="Transactions" icon={<Icon icon="carbon:receipt" />}>
+						<MenuItem active={router.pathname === "/transactions/classes"}>
+							<Link href={"/transactions/classes"}>Classes</Link>
+						</MenuItem>
+						<MenuItem active={router.pathname === "/transactions/memberships"}>
+							<Link href={"/transactions/memberships"}>Memberships</Link>
+						</MenuItem>
+					</SubMenu>
 					<MenuItem
 						active={router.pathname === "/videos"}
 						icon={<Icon icon="ant-design:video-camera-outlined" />}

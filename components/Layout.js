@@ -10,7 +10,7 @@ export default function Layout(props) {
 	return (
 		<div className="d-flex">
 			<Navbar toggled={toggled} onToggleSidebar={onToggleSidebar} />
-			<div className="d-flex flex-column w-100">
+			<div className="d-flex flex-column w-100" style={{ minWidth: "0" }}>
 				<div
 					className={
 						"d-lg-none flex-shrink-0 d-flex justify-content-center bg-primary shadow rounded-circle ms-4 mt-4 p-2"

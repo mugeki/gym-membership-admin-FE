@@ -1,20 +1,15 @@
 import Layout from "../../components/Layout";
 import { FormControl, Table, Pagination, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import {
-	generateAxiosConfig,
-	handleDate,
-	handleLowerCase,
-	handleUnauthorized,
-} from "../../utils/helper";
+import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
-import { Icon } from "@iconify/react";
 import AddVideoModal from "../../components/elements/AddVideoModal";
+import TableVideo from "../../components/elements/TableVideo";
 
 export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
 	const [videos, setVideos] = useState({
-		title: "",
+		filterSearch: "",
 		data: [],
 		currPage: 1,
 		pages: [],
@@ -30,6 +25,11 @@ export default function Videos() {
 			)
 			.then((res) => {
 				if (res.status === 204) {
+					setTransactions({
+						data: [],
+						currPage: 1,
+						pages: [],
+					});
 					setError("No record found");
 				} else {
 					const page = { ...res.data.page };
@@ -47,6 +47,7 @@ export default function Videos() {
 							pages: items,
 						};
 					});
+					setError("");
 				}
 			})
 			.catch((error) => {
@@ -63,7 +64,7 @@ export default function Videos() {
 	}, [setVideos]);
 
 	const handlePage = (index) => {
-		fetch(index, videos.title);
+		fetch(index, videos.filterSearch);
 	};
 
 	return (
@@ -94,43 +95,8 @@ export default function Videos() {
 				</div>
 
 				<div className="mb-2">
-					<Table hover responsive>
-						<thead className="bg-primary text-white">
-							<tr>
-								<th>ID</th>
-								<th>Title</th>
-								<th>Classification</th>
-								<th>Admin ID</th>
-								<th>Member Only</th>
-								<th>Video</th>
-								<th>Date Created</th>
-							</tr>
-						</thead>
-						<tbody className="border-top-0">
-							{error && <p className="text-center text-light mt-5">{error}</p>}
-							{videos?.data?.map((item) => (
-								<tr key={item.id}>
-									<th>{item.id}</th>
-									<td>{item.title}</td>
-									<td>{handleLowerCase(item.classification)}</td>
-									<td>{item.admin_id}</td>
-									<td>
-										{item.member_only ? (
-											<Icon icon="bi:check-lg" color="#69ba5b" />
-										) : (
-											<Icon icon="ep:close-bold" color="#cf5151" />
-										)}
-									</td>
-									<td>
-										<a href={item.url} target="_blank" rel="noreferrer">
-											View
-										</a>
-									</td>
-									<td>{handleDate(item.created_at)}</td>
-								</tr>
-							))}
-						</tbody>
-					</Table>
+					<TableVideo entries={videos.data} error={error} setError={setError} />
+					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
 				{videos && (
