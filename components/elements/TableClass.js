@@ -11,7 +11,7 @@ import {
 	removeElement,
 } from "../../utils/helper";
 
-export default function TableNewsletter({
+export default function TableClass({
 	entries,
 	setError,
 	onShowModal,
@@ -21,12 +21,12 @@ export default function TableNewsletter({
 	const onDelete = (id, item) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
-			.delete(`${API_URL}/articles/${id}`, generateAxiosConfig())
+			.delete(`${API_URL}/classes/${id}`, generateAxiosConfig())
 			.then(() => {
 				const newData = [...entries];
 				removeElement(newData, item);
 				onStateChange({ data: newData });
-				toast.success("Newsletter deleted", {
+				toast.success("Video deleted", {
 					position: "top-center",
 					autoClose: 5000,
 					hideProgressBar: false,
@@ -49,12 +49,14 @@ export default function TableNewsletter({
 			<thead className="bg-primary text-white">
 				<tr>
 					<th>ID</th>
-					<th>Title</th>
-					<th>Classification</th>
-					<th>Admin ID</th>
-					<th>Member Only</th>
+					<th>Name</th>
 					<th>Image</th>
-					<th>Date Created</th>
+					<th>Price</th>
+					<th>Slots</th>
+					<th>Participant</th>
+					<th>Trainer</th>
+					<th>Schedule</th>
+					<th>Location</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -73,7 +75,7 @@ export default function TableNewsletter({
 							)}
 						</td>
 						<td>
-							<a href={item.url_image} target="_blank" rel="noreferrer">
+							<a href={item.url} target="_blank" rel="noreferrer">
 								View
 							</a>
 						</td>
@@ -94,8 +96,7 @@ export default function TableNewsletter({
 													index: i,
 													title: item.title,
 													classification_id: item.classification_id,
-													url_image: item.url_image,
-													text: item.text,
+													url: item.url,
 													member_only: item.member_only,
 													admin_id: admin.id,
 												},

@@ -39,7 +39,7 @@ export default function useValidateForm() {
 			}
 		} else if (formValue) {
 			for (const key in formValue) {
-				if (formValue[key] === "") {
+				if (key !== "url_image" && formValue[key] === "") {
 					messages[key] = "Field cannot be empty";
 				}
 			}

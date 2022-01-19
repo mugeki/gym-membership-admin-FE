@@ -3,13 +3,13 @@ import { FormControl, Pagination, Button, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
-import VideoFormModal from "../../components/elements/VideoFormModal";
-import TableVideo from "../../components/elements/TableVideo";
 import { Icon } from "@iconify/react";
+import TableNewsletter from "../../components/elements/TableNewsletter";
+import NewsletterFormModal from "../../components/elements/NewsletterFormModal";
 
-export default function Videos() {
+export default function Newsletters() {
 	const [modalShow, setModalShow] = useState(false);
-	const [videos, setVideos] = useState({
+	const [newsletters, setNewsletters] = useState({
 		data: [],
 		currPage: 1,
 		pages: [],
@@ -22,12 +22,12 @@ export default function Videos() {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
 			.get(
-				`${API_URL}/videos?title=${title}&page=${page}`,
+				`${API_URL}/articles?title=${title}&page=${page}`,
 				generateAxiosConfig()
 			)
 			.then((res) => {
 				if (res.status === 204) {
-					setVideos({
+					setNewsletters({
 						data: [],
 						currPage: 1,
 						pages: [],
@@ -41,7 +41,7 @@ export default function Videos() {
 					for (let i = 0; i < length; i++) {
 						items.push(i + 1);
 					}
-					setVideos((state) => {
+					setNewsletters((state) => {
 						return {
 							...state,
 							data: res.data.data,
@@ -63,7 +63,7 @@ export default function Videos() {
 
 	useEffect(() => {
 		fetch(1, "");
-	}, [setVideos]);
+	}, [setNewsletters]);
 
 	const handlePage = (index) => {
 		fetch(index, filter);
@@ -75,23 +75,23 @@ export default function Videos() {
 	};
 
 	const onStateChange = (value) => {
-		setVideos((state) => {
+		setNewsletters((state) => {
 			return { ...state, ...value };
 		});
 	};
 
 	return (
 		<Layout>
-			<VideoFormModal
+			<NewsletterFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
-				entries={videos?.data}
+				entries={newsletters?.data}
 				data={modalProps?.data}
 				action={modalProps?.action}
 				onStateChange={onStateChange}
 			/>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
-				<h1 className="text-end mb-5">Videos</h1>
+				<h1 className="text-end mb-5">Newsletters</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-between mb-3">
 					<div className="d-flex">
 						<Button
@@ -116,6 +116,7 @@ export default function Videos() {
 							Refresh
 						</Button>
 					</div>
+
 					<div className="d-flex">
 						<InputGroup>
 							<FormControl
@@ -139,9 +140,9 @@ export default function Videos() {
 				</div>
 
 				<div className="mb-2">
-					{videos.data && (
-						<TableVideo
-							entries={videos.data}
+					{newsletters.data && (
+						<TableNewsletter
+							entries={newsletters.data}
 							setError={setError}
 							onShowModal={(value) => {
 								setModalProps(value);
@@ -153,12 +154,12 @@ export default function Videos() {
 					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
-				{videos && (
+				{newsletters && (
 					<Pagination className="align-self-center">
-						{videos.pages.map((item) => (
+						{newsletters.pages.map((item) => (
 							<Pagination.Item
 								key={item}
-								active={item === videos.currPage}
+								active={item === newsletters.currPage}
 								onClick={() => handlePage(item)}
 							>
 								{item}

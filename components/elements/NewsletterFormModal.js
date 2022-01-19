@@ -9,8 +9,9 @@ import {
 	handleLowerCase,
 	handleUnauthorized,
 } from "../../utils/helper";
+import FileUpload from "./FileUpload";
 
-export default function VideoFormModal({
+export default function NewsletterFormModal({
 	entries,
 	data,
 	action,
@@ -22,11 +23,11 @@ export default function VideoFormModal({
 	const [form, setForm] = useState({
 		title: "",
 		classification_id: "",
-		url: "",
+		url_image: "",
+		text: "",
 		member_only: false,
 		admin_id: admin.id,
 	});
-
 	useEffect(() => {
 		data && setForm(data);
 	}, [data]);
@@ -62,7 +63,8 @@ export default function VideoFormModal({
 		setForm({
 			title: "",
 			classification_id: "",
-			url: "",
+			url_image: "",
+			text: "",
 			member_only: false,
 			admin_id: admin.id,
 		});
@@ -81,6 +83,8 @@ export default function VideoFormModal({
 
 	const onSubmit = (e) => {
 		e.preventDefault();
+		delete form.id;
+		delete form.index;
 		const newErrors = validateForm(undefined, undefined, form);
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
@@ -89,7 +93,7 @@ export default function VideoFormModal({
 			if (action === "add") {
 				axios
 					.post(
-						`${API_URL}/videos`,
+						`${API_URL}/articles`,
 						{
 							...form,
 						},
@@ -102,7 +106,7 @@ export default function VideoFormModal({
 							newData.pop();
 						}
 						onStateChange({ data: newData });
-						toast.success("Video added", {
+						toast.success("Newsletter added", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -119,7 +123,7 @@ export default function VideoFormModal({
 			} else {
 				axios
 					.put(
-						`${API_URL}/videos/${data.id}`,
+						`${API_URL}/articles/${data.id}`,
 						{
 							...form,
 						},
@@ -129,7 +133,7 @@ export default function VideoFormModal({
 						const newData = [...entries];
 						newData[data.index] = res.data.data;
 						onStateChange({ data: newData });
-						toast.success("Video updated", {
+						toast.success("Newsletter updated", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -190,15 +194,14 @@ export default function VideoFormModal({
 							{error.title}
 						</Form.Control.Feedback>
 					</FloatingLabel>
-
-					<FloatingLabel className="mb-3" label="Video URL">
+					<FloatingLabel className="mb-3" label="Text">
 						<Form.Control
-							type="text"
+							as="textarea"
 							placeholder=" "
-							name="url"
-							value={form.url}
+							name="text"
+							value={form.text}
 							onChange={onChange}
-							isInvalid={!!error.url}
+							isInvalid={!!error.text}
 						/>
 						<Form.Control.Feedback type="invalid">
 							{error.title}
@@ -213,7 +216,14 @@ export default function VideoFormModal({
 						checked={form.member_only}
 						onChange={onChange}
 					/>
-
+					<FileUpload
+						image={form.url_image}
+						setImageSrc={(value) => {
+							setForm((state) => {
+								return { ...state, url_image: value };
+							});
+						}}
+					/>
 					<Button variant="primary w-100 mt-3" type="submit">
 						Submit
 					</Button>
