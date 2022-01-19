@@ -39,10 +39,18 @@ function generateAxiosConfig() {
 	return config;
 }
 
+function removeElement(array, item) {
+	const index = array.indexOf(item);
+	if (index > -1) {
+		array.splice(index, 1);
+	}
+}
+
 export {
 	handleUnauthorized,
 	redirect,
 	handleLowerCase,
 	handleDate,
 	generateAxiosConfig,
+	removeElement,
 };

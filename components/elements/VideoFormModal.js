@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Form, Button, Modal, FloatingLabel } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import useValidateForm from "../../hooks/useValidateForm";
 import {
 	generateAxiosConfig,
@@ -9,7 +10,14 @@ import {
 	handleUnauthorized,
 } from "../../utils/helper";
 
-export default function AddVideoModal(props) {
+export default function VideoFormModal({
+	entries,
+	data,
+	action,
+	show,
+	onHide,
+	onStateChange,
+}) {
 	const admin = useSelector((state) => state.admin);
 	const [form, setForm] = useState({
 		title: "",
@@ -18,6 +26,15 @@ export default function AddVideoModal(props) {
 		member_only: false,
 		admin_id: admin.id,
 	});
+
+	useEffect(() => {
+		if (data) {
+			setForm(data);
+			delete form.id;
+			delete form.index;
+		}
+	}, [data, form.id, form.index]);
+
 	const [dropdown, setDropdown] = useState();
 	const [error, setError] = useState({});
 	const { validateForm } = useValidateForm();
@@ -48,7 +65,11 @@ export default function AddVideoModal(props) {
 	const onChange = (e) => {
 		const name = e.target.name;
 		const value = e.target.value;
-		setForm({ ...form, [name]: value });
+		if (name !== "member_only") {
+			setForm({ ...form, [name]: value });
+		} else {
+			setForm({ ...form, [name]: !form.member_only });
+		}
 	};
 
 	const onSubmit = (e) => {
@@ -58,28 +79,71 @@ export default function AddVideoModal(props) {
 			setError(newErrors);
 		} else {
 			const API_URL = process.env.BE_API_URL_LOCAL;
-			axios
-				.post(
-					`${API_URL}/videos`,
-					{
-						...form,
-					},
-					generateAxiosConfig()
-				)
-				.catch((error) => {
-					handleUnauthorized(error.response);
-					console.log(error);
-				});
+			if (action === "add") {
+				console.log("form", form);
+				axios
+					.post(
+						`${API_URL}/videos`,
+						{
+							...form,
+						},
+						generateAxiosConfig()
+					)
+					.then((res) => {
+						const newData = [...entries];
+						newData.unshift(res.data.data);
+						newData.pop();
+						onStateChange({ data: newData });
+						toast.success("Video added", {
+							position: "top-center",
+							autoClose: 5000,
+							hideProgressBar: false,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+						});
+					})
+					.catch((error) => {
+						console.log(error.response);
+						handleUnauthorized(error.response);
+						console.log(error);
+					});
+			} else {
+				axios
+					.put(
+						`${API_URL}/videos/${data.id}`,
+						{
+							...form,
+						},
+						generateAxiosConfig()
+					)
+					.then((res) => {
+						const newData = [...entries];
+						newData[data.index] = res.data.data;
+						onStateChange({ data: newData });
+						toast.success("Video updated", {
+							position: "top-center",
+							autoClose: 5000,
+							hideProgressBar: false,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+						});
+					})
+					.catch((error) => {
+						handleUnauthorized(error.response);
+						console.log(error);
+					});
+			}
 		}
 	};
 
-	useEffect(() => {
-		console.log(form);
-	}, [form]);
-
 	return (
 		<Modal
-			{...props}
+			show={show}
+			onHide={onHide}
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
@@ -106,7 +170,7 @@ export default function AddVideoModal(props) {
 							type="text"
 							placeholder=" "
 							name="title"
-							value={form.classification}
+							value={form.classification_id}
 							onChange={onChange}
 						>
 							{dropdown?.map((item, i) => (
@@ -135,14 +199,12 @@ export default function AddVideoModal(props) {
 					</FloatingLabel>
 					<Form.Check
 						type="checkbox"
+						name="member_only"
 						className="mb-3"
 						label="Member Only"
 						value={form.member_only}
-						onClick={() => {
-							setForm((state) => {
-								return { ...state, member_only: !state.member_only };
-							});
-						}}
+						checked={form.member_only}
+						onChange={onChange}
 					/>
 
 					<Button variant="primary w-100 mt-3" type="submit">

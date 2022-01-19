@@ -99,6 +99,12 @@ export default function ClassTransactions() {
 		});
 	};
 
+	const onStateChange = (value) => {
+		setTransactions((state) => {
+			return { ...state, ...value };
+		});
+	};
+
 	return (
 		<Layout>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
@@ -160,7 +166,7 @@ export default function ClassTransactions() {
 				<div className="mb-2">
 					<TableClassTransaction
 						entries={transactions.data}
-						error={error}
+						onStateChange={onStateChange}
 						setError={setError}
 					/>
 					{error && <p className="text-center text-light mt-5">{error}</p>}

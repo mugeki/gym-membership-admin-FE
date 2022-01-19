@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 import Navbar from "./elements/Navbar";
 
 export default function Layout(props) {
@@ -28,6 +29,7 @@ export default function Layout(props) {
 				</div>
 				{props.children}
 			</div>
+			<ToastContainer />
 		</div>
 	);
 }

@@ -9,20 +9,29 @@ import {
 	handleUnauthorized,
 } from "../../utils/helper";
 
-export default function TableClassTransaction({ entries }) {
+export default function TableClassTransaction({
+	entries,
+	onStateChange,
+	setError,
+}) {
 	const admin = useSelector((state) => state.admin);
-	const onAction = (id, status, admin_id) => {
+	const onAction = (index, id, status, admin_id) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
 			.put(
 				`${API_URL}/transaction-class/update-status/${id}?status=${status}&admin=${admin_id}`,
+				{},
 				generateAxiosConfig()
 			)
+			.then(() => {
+				const newData = [...entries];
+				newData[index].status = status;
+				onStateChange({ data: newData });
+			})
 			.catch((error) => {
 				if (error.response) {
 					handleUnauthorized(error.response);
 					setError(error.response.data.meta.messages[0]);
-					console.log(error.response);
 					console.log(error);
 				}
 			});
@@ -42,7 +51,7 @@ export default function TableClassTransaction({ entries }) {
 				</tr>
 			</thead>
 			<tbody className="border-top-0">
-				{entries?.map((item) => (
+				{entries?.map((item, i) => (
 					<tr key={item.id}>
 						<td>{item.id}</td>
 						<td>
@@ -91,7 +100,7 @@ export default function TableClassTransaction({ entries }) {
 										<p
 											className="my-auto ms-1 text-success"
 											onClick={() => {
-												onAction(item.id, "accepted", admin.id);
+												onAction(i, item.id, "accepted", admin.id);
 											}}
 										>
 											Confirm
@@ -106,7 +115,7 @@ export default function TableClassTransaction({ entries }) {
 										<p
 											className="my-auto ms-1 text-danger"
 											onClick={() => {
-												onAction(item.id, "declined", admin.id);
+												onAction(i, item.id, "declined", admin.id);
 											}}
 										>
 											Decline

@@ -1,20 +1,28 @@
 import Layout from "../../components/Layout";
-import { FormControl, Table, Pagination, Button } from "react-bootstrap";
+import {
+	FormControl,
+	Table,
+	Pagination,
+	Button,
+	Form,
+	InputGroup,
+} from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
-import AddVideoModal from "../../components/elements/AddVideoModal";
+import VideoFormModal from "../../components/elements/VideoFormModal";
 import TableVideo from "../../components/elements/TableVideo";
 
 export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
 	const [videos, setVideos] = useState({
-		filterSearch: "",
 		data: [],
 		currPage: 1,
 		pages: [],
 	});
+	const [filter, setFilter] = useState("");
 	const [error, setError] = useState();
+	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page, title) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
@@ -64,38 +72,80 @@ export default function Videos() {
 	}, [setVideos]);
 
 	const handlePage = (index) => {
-		fetch(index, videos.filterSearch);
+		fetch(index, filter);
+	};
+
+	const onChange = (e) => {
+		const name = e.target.name;
+		const value = e.target.value;
+		setFilter(value);
+	};
+
+	const onStateChange = (value) => {
+		setVideos((state) => {
+			return { ...state, ...value };
+		});
 	};
 
 	return (
 		<Layout>
-			<AddVideoModal show={modalShow} onHide={() => setModalShow(false)} />
+			<VideoFormModal
+				show={modalShow}
+				onHide={() => setModalShow(false)}
+				entries={videos?.data}
+				data={modalProps?.data}
+				action={modalProps?.action}
+				onStateChange={onStateChange}
+			/>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
 				<h1 className="text-end mb-5">Videos</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-between mb-3">
-					<Button className="mb-3 mb-md-0" onClick={() => setModalShow(true)}>
+					<Button
+						className="mb-3 mb-md-0"
+						onClick={() => {
+							setModalProps({
+								data: undefined,
+								action: "add",
+							});
+							setModalShow(true);
+						}}
+					>
 						Add
 					</Button>
 					<div className="d-flex">
-						<FormControl
-							type="search"
-							placeholder="Find title"
-							className="me-2"
-							aria-label="Search"
-						/>
-						{/* <DropdownButton
-							as={ButtonGroup}
-							title="Classification"
-							id="bg-nested-dropdown"
-						>
-							<Dropdown.Item eventKey="1">status</Dropdown.Item>
-							<Dropdown.Item eventKey="2">status</Dropdown.Item>
-						</DropdownButton> */}
+						<InputGroup>
+							<FormControl
+								type="search"
+								name="title"
+								placeholder="Find title"
+								aria-label="Search"
+								value={filter}
+								onChange={onChange}
+							/>
+							<Button
+								variant="outline-primary"
+								onClick={() => {
+									fetch(1, filter);
+								}}
+							>
+								Search
+							</Button>
+						</InputGroup>
 					</div>
 				</div>
 
 				<div className="mb-2">
-					<TableVideo entries={videos.data} error={error} setError={setError} />
+					{videos.data && (
+						<TableVideo
+							entries={videos.data}
+							setError={setError}
+							onShowModal={(value) => {
+								setModalProps(value);
+								setModalShow(true);
+							}}
+							onStateChange={onStateChange}
+						/>
+					)}
 					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
