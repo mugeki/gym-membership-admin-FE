@@ -1,17 +1,11 @@
 import Layout from "../../components/Layout";
-import {
-	FormControl,
-	Table,
-	Pagination,
-	Button,
-	Form,
-	InputGroup,
-} from "react-bootstrap";
+import { FormControl, Pagination, Button, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
 import VideoFormModal from "../../components/elements/VideoFormModal";
 import TableVideo from "../../components/elements/TableVideo";
+import { Icon } from "@iconify/react";
 
 export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
@@ -33,7 +27,7 @@ export default function Videos() {
 			)
 			.then((res) => {
 				if (res.status === 204) {
-					setTransactions({
+					setVideos({
 						data: [],
 						currPage: 1,
 						pages: [],
@@ -76,7 +70,6 @@ export default function Videos() {
 	};
 
 	const onChange = (e) => {
-		const name = e.target.name;
 		const value = e.target.value;
 		setFilter(value);
 	};
@@ -123,12 +116,12 @@ export default function Videos() {
 								onChange={onChange}
 							/>
 							<Button
-								variant="outline-primary"
+								variant="primary"
 								onClick={() => {
 									fetch(1, filter);
 								}}
 							>
-								Search
+								<Icon icon="ant-design:search-outlined" />
 							</Button>
 						</InputGroup>
 					</div>
