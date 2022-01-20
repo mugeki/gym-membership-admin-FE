@@ -38,9 +38,11 @@ export default function Login() {
 					...form,
 				})
 				.then((res) => {
+					console.log(res);
 					handleLogin(res.data.data);
 				})
 				.catch((error) => {
+					console.log(error.response);
 					setErrorMsg({
 						...errorMsg,
 						auth: error.response.data.meta.messages[0],

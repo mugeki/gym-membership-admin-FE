@@ -33,9 +33,11 @@ function generateAxiosConfig() {
 	const token = Base64.decode(cookies.get("token"));
 	const config = {
 		headers: {
+			"Content-Type": "application/json",
 			Authorization: "Bearer " + token,
 		},
 	};
+
 	return config;
 }
 
