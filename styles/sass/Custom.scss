@@ -5,5 +5,10 @@ $secondary: #c99d00;
 $light: #a5acb8;
 $danger: #cf5151;
 $success: #69ba5b;
+$table-cell-padding-y: 1rem;
+$table-cell-padding-x: 1rem;
+$table-cell-padding-y-sm: 1rem;
+$table-cell-padding-x-sm: 1rem;
+$table-th-font-weight: 400;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";

@@ -7,3 +7,9 @@
 		width: 50% !important;
 	}
 }
+
+@media (min-width: 992px) {
+	.container {
+		width: 35% !important;
+	}
+}
