@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
 import { Icon } from "@iconify/react";
-import TableNewsletter from "../../components/elements/TableNewsletter";
 import NewsletterFormModal from "../../components/elements/NewsletterFormModal";
+import TableClass from "../../components/elements/TableClass";
+import ClassFormModal from "../../components/elements/ClassFormModal";
 
-export default function Newsletters() {
+export default function Classes() {
 	const [modalShow, setModalShow] = useState(false);
-	const [newsletters, setNewsletters] = useState({
+	const [classes, setClasses] = useState({
 		data: [],
 		currPage: 1,
 		pages: [],
@@ -18,16 +19,16 @@ export default function Newsletters() {
 	const [error, setError] = useState();
 	const [modalProps, setModalProps] = useState();
 
-	const fetch = (page, title) => {
+	const fetch = (page, name) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
 			.get(
-				`${API_URL}/articles?title=${title}&page=${page}`,
+				`${API_URL}/classes?name=${name}&page=${page}`,
 				generateAxiosConfig()
 			)
 			.then((res) => {
 				if (res.status === 204) {
-					setNewsletters({
+					setClasses({
 						data: [],
 						currPage: 1,
 						pages: [],
@@ -41,7 +42,7 @@ export default function Newsletters() {
 					for (let i = 0; i < length; i++) {
 						items.push(i + 1);
 					}
-					setNewsletters((state) => {
+					setClasses((state) => {
 						return {
 							...state,
 							data: res.data.data,
@@ -63,7 +64,7 @@ export default function Newsletters() {
 
 	useEffect(() => {
 		fetch(1, "");
-	}, [setNewsletters]);
+	}, [setClasses]);
 
 	const handlePage = (index) => {
 		fetch(index, filter);
@@ -75,23 +76,23 @@ export default function Newsletters() {
 	};
 
 	const onStateChange = (value) => {
-		setNewsletters((state) => {
+		setClasses((state) => {
 			return { ...state, ...value };
 		});
 	};
 
 	return (
 		<Layout>
-			<NewsletterFormModal
+			<ClassFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
-				entries={newsletters?.data}
+				entries={classes?.data}
 				data={modalProps?.data}
 				action={modalProps?.action}
 				onStateChange={onStateChange}
 			/>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
-				<h1 className="text-end mb-5">Newsletters</h1>
+				<h1 className="text-end mb-5">Classes</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-between mb-3">
 					<div className="d-flex">
 						<Button
@@ -121,8 +122,8 @@ export default function Newsletters() {
 						<InputGroup>
 							<FormControl
 								type="search"
-								name="title"
-								placeholder="Find title"
+								name="name"
+								placeholder="Find name"
 								aria-label="Search"
 								value={filter}
 								onChange={onChange}
@@ -140,28 +141,28 @@ export default function Newsletters() {
 				</div>
 
 				<div className="mb-2">
-					{newsletters.data && (
-						<TableNewsletter
-							entries={newsletters.data}
+					{classes.data && (
+						<TableClass
+							entries={classes.data}
 							setError={setError}
 							onShowModal={(value) => {
 								setModalProps(value);
 								setModalShow(true);
 							}}
 							refetch={() => {
-								fetch(newsletters.currPage, filter);
+								fetch(classes.currPage, filter);
 							}}
 						/>
 					)}
 					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
-				{newsletters && (
+				{classes && (
 					<Pagination className="align-self-center">
-						{newsletters.pages.map((item) => (
+						{classes.pages.map((item) => (
 							<Pagination.Item
 								key={item}
-								active={item === newsletters.currPage}
+								active={item === classes.currPage}
 								onClick={() => handlePage(item)}
 							>
 								{item}

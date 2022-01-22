@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import Image from "next/image";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -8,24 +9,21 @@ import {
 	handleDate,
 	handleLowerCase,
 	handleUnauthorized,
-	removeElement,
 } from "../../utils/helper";
 
 export default function TableNewsletter({
 	entries,
 	setError,
 	onShowModal,
-	onStateChange,
+	refetch,
 }) {
 	const admin = useSelector((state) => state.admin);
-	const onDelete = (id, item) => {
+	const onDelete = (id) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
 			.delete(`${API_URL}/articles/${id}`, generateAxiosConfig())
 			.then(() => {
-				const newData = [...entries];
-				removeElement(newData, item);
-				onStateChange({ data: newData });
+				refetch();
 				toast.success("Newsletter deleted", {
 					position: "top-center",
 					autoClose: 5000,
@@ -73,9 +71,14 @@ export default function TableNewsletter({
 							)}
 						</td>
 						<td>
-							<a href={item.url_image} target="_blank" rel="noreferrer">
-								View
-							</a>
+							<Image
+								src={item.url_image}
+								objectFit="cover"
+								width={"170px"}
+								height={"100px"}
+								alt="thumbnail"
+								className="rounded"
+							/>
 						</td>
 						<td>{handleDate(item.created_at)}</td>
 						<td>
@@ -115,7 +118,7 @@ export default function TableNewsletter({
 									<p
 										className="my-auto ms-1 text-danger"
 										onClick={() => {
-											onDelete(item.id, item);
+											onDelete(item.id);
 										}}
 									>
 										Delete

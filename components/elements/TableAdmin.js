@@ -1,29 +1,27 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import Image from "next/image";
 import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
 	generateAxiosConfig,
-	handleDate,
 	handleLowerCase,
 	handleUnauthorized,
 } from "../../utils/helper";
 
-export default function TableVideo({
+export default function TableAdmin({
 	entries,
 	setError,
 	onShowModal,
 	refetch,
 }) {
-	const admin = useSelector((state) => state.admin);
 	const onDelete = (id) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
-			.delete(`${API_URL}/videos/${id}`, generateAxiosConfig())
+			.delete(`${API_URL}/admins/${id}`, generateAxiosConfig())
 			.then(() => {
 				refetch();
-				toast.success("Video deleted", {
+				toast.success("Admin deleted", {
 					position: "top-center",
 					autoClose: 5000,
 					hideProgressBar: false,
@@ -46,12 +44,14 @@ export default function TableVideo({
 			<thead className="bg-primary text-white">
 				<tr>
 					<th>ID</th>
-					<th>Title</th>
-					<th>Classification</th>
-					<th>Admin ID</th>
-					<th>Member Only</th>
-					<th>Video</th>
-					<th>Date Created</th>
+					<th>Name</th>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Gender</th>
+					<th>Phone Number</th>
+					<th>Address</th>
+					<th>Profile Image</th>
+					<th>Super Admin</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -59,22 +59,29 @@ export default function TableVideo({
 				{entries?.map((item, i) => (
 					<tr key={item.id}>
 						<td>{item.id}</td>
-						<td>{item.title}</td>
-						<td>{handleLowerCase(item.classification)}</td>
-						<td>{item.admin_id}</td>
+						<td>{item.fullname}</td>
+						<td>{item.username}</td>
+						<td>{item.email}</td>
+						<td>{handleLowerCase(item.gender)}</td>
+						<td>{item.telephone}</td>
+						<td>{item.address}</td>
 						<td>
-							{item.member_only ? (
+							<Image
+								src={item.url_image}
+								objectFit="cover"
+								width={"80px"}
+								height={"80px"}
+								alt="admin"
+								className="rounded-circle"
+							/>
+						</td>
+						<td>
+							{item.is_super_admin ? (
 								<Icon icon="bi:check-lg" color="#69ba5b" />
 							) : (
 								<Icon icon="ep:close-bold" color="#cf5151" />
 							)}
 						</td>
-						<td>
-							<a href={item.url} target="_blank" rel="noreferrer">
-								View
-							</a>
-						</td>
-						<td>{handleDate(item.created_at)}</td>
 						<td>
 							<>
 								<div
@@ -87,13 +94,10 @@ export default function TableVideo({
 										onClick={() => {
 											onShowModal({
 												data: {
+													...item,
 													id: item.id,
+													password: "",
 													index: i,
-													title: item.title,
-													classification_id: item.classification_id,
-													url: item.url,
-													member_only: item.member_only,
-													admin_id: admin.id,
 												},
 												action: "edit",
 											});

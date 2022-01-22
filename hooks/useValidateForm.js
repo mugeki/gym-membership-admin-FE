@@ -6,6 +6,9 @@ export default function useValidateForm() {
 		const regexEmail =
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		const regexPhone = /^[0-9]{10,15}$/;
+		const isNonNegativeField = (name) => {
+			return name === "price" || name === "kuota" || name === "period_time";
+		};
 
 		let messages = {};
 
@@ -41,6 +44,9 @@ export default function useValidateForm() {
 			for (const key in formValue) {
 				if (key !== "url_image" && formValue[key] === "") {
 					messages[key] = "Field cannot be empty";
+				}
+				if (isNonNegativeField(key) && formValue[key] < 0) {
+					messages[key] = "Non-negative value required";
 				}
 			}
 		}

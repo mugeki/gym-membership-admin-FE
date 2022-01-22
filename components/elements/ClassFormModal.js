@@ -1,17 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Form, Button, Modal, FloatingLabel } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import {
+	Form,
+	Button,
+	Modal,
+	FloatingLabel,
+	InputGroup,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
+import useHandleDate from "../../hooks/useHandleDate";
 import useValidateForm from "../../hooks/useValidateForm";
 import {
 	generateAxiosConfig,
 	handleLowerCase,
 	handleUnauthorized,
 } from "../../utils/helper";
+import DateForm from "./DateForm";
+import DateList from "./DateList";
 import FileUpload from "./FileUpload";
 
-export default function NewsletterFormModal({
+export default function ClassFormModal({
 	entries,
 	data,
 	action,
@@ -19,14 +27,17 @@ export default function NewsletterFormModal({
 	onHide,
 	onStateChange,
 }) {
-	const admin = useSelector((state) => state.admin);
 	const [form, setForm] = useState({
-		title: "",
-		classification_id: "",
+		name: "",
+		description: "",
+		price: "",
+		kuota: "",
+		location: "",
+		date: [{ day: "1", time_start: "", time_end: "" }],
+		is_online: false,
+		available_status: false,
+		trainer_id: "",
 		url_image: "",
-		text: "",
-		member_only: false,
-		admin_id: admin.id,
 	});
 	useEffect(() => {
 		data && setForm(data);
@@ -35,23 +46,24 @@ export default function NewsletterFormModal({
 	const [dropdown, setDropdown] = useState();
 	const [error, setError] = useState({});
 	const { validateForm } = useValidateForm();
+	const { newDateList } = useHandleDate();
 
 	useEffect(() => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
-			.get(`${API_URL}/classification`, generateAxiosConfig())
+			.get(`${API_URL}/trainers`, generateAxiosConfig())
 			.then((res) => {
-				const classifications = [];
+				const trainers = [];
 				for (const item of res.data.data) {
-					classifications.push(item);
+					trainers.push(item);
 				}
 				setForm((state) => {
 					return {
 						...state,
-						classification_id: classifications[0].id,
+						trainer_id: trainers[0].id,
 					};
 				});
-				setDropdown(classifications);
+				setDropdown(trainers);
 			})
 			.catch((error) => {
 				handleUnauthorized(error.response);
@@ -61,12 +73,16 @@ export default function NewsletterFormModal({
 
 	const onHideModal = () => {
 		setForm({
-			title: "",
-			classification_id: "",
+			name: "",
+			description: "",
+			price: "",
+			kuota: "",
+			location: "",
+			date: [{ day: "1", time_start: "", time_end: "" }],
+			is_online: false,
+			available_status: false,
+			trainer_id: "",
 			url_image: "",
-			text: "",
-			member_only: false,
-			admin_id: admin.id,
 		});
 		setError({});
 		onHide();
@@ -75,10 +91,12 @@ export default function NewsletterFormModal({
 	const onChange = (e) => {
 		const name = e.target.name;
 		const value = e.target.value;
-		if (name !== "member_only") {
-			setForm({ ...form, [name]: value });
+		if (name === "is_online") {
+			setForm({ ...form, [name]: !form.is_online });
+		} else if (name === "available_status") {
+			setForm({ ...form, [name]: !form.available_status });
 		} else {
-			setForm({ ...form, [name]: !form.member_only });
+			setForm({ ...form, [name]: value });
 		}
 	};
 
@@ -91,6 +109,10 @@ export default function NewsletterFormModal({
 			const formData = form;
 			delete formData.id;
 			delete formData.index;
+			formData.price = parseInt(formData.price);
+			formData.kuota = parseInt(formData.kuota);
+			formData.date = newDateList(formData.date);
+			console.log("formData.date", formData.date);
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
@@ -98,7 +120,7 @@ export default function NewsletterFormModal({
 			if (action === "add") {
 				axios
 					.post(
-						`${API_URL}/articles`,
+						`${API_URL}/classes`,
 						{
 							...formData,
 						},
@@ -111,7 +133,7 @@ export default function NewsletterFormModal({
 							newData.pop();
 						}
 						onStateChange({ data: newData });
-						toast.success("Newsletter added", {
+						toast.success("Class added", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -128,7 +150,7 @@ export default function NewsletterFormModal({
 			} else {
 				axios
 					.put(
-						`${API_URL}/articles/${data.id}`,
+						`${API_URL}/classes/${data.id}`,
 						{
 							...formData,
 						},
@@ -138,7 +160,7 @@ export default function NewsletterFormModal({
 						const newData = [...entries];
 						newData[data.index] = res.data.data;
 						onStateChange({ data: newData });
-						toast.success("Newsletter updated", {
+						toast.success("Class updated", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -156,6 +178,10 @@ export default function NewsletterFormModal({
 		}
 	};
 
+	useEffect(() => {
+		console.log("form", form);
+	}, [form]);
+
 	return (
 		<Modal
 			show={show}
@@ -163,61 +189,141 @@ export default function NewsletterFormModal({
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
+			scrollable={true}
 		>
 			<Modal.Header closeButton></Modal.Header>
 			<Modal.Body className="p-5">
 				<Form noValidate onSubmit={onSubmit}>
-					<FloatingLabel className="mb-3" label="Title">
+					<FloatingLabel className="mb-3" label="Name">
 						<Form.Control
 							type="text"
 							placeholder=" "
-							name="title"
-							value={form.title}
+							name="name"
+							value={form.name}
 							onChange={onChange}
-							isInvalid={!!error.title}
+							isInvalid={!!error.name}
 						/>
 						<Form.Control.Feedback type="invalid">
-							{error.title}
+							{error.name}
 						</Form.Control.Feedback>
 					</FloatingLabel>
 
-					<FloatingLabel className="mb-3" label="Classification">
+					<FloatingLabel className="mb-3" label="Description">
+						<Form.Control
+							as="textarea"
+							placeholder=" "
+							name="description"
+							value={form.description}
+							onChange={onChange}
+							isInvalid={!!error.description}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.description}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Trainer">
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="title"
-							value={form.classification_id}
+							name="trainer"
+							value={form.trainer_id}
 							onChange={onChange}
 						>
 							{dropdown?.map((item, i) => (
 								<option key={i} value={item.id}>
-									{handleLowerCase(item.name)}
+									{handleLowerCase(item.fullname)}
 								</option>
 							))}
 						</Form.Select>
 					</FloatingLabel>
-					<FloatingLabel className="mb-3" label="Text">
-						<Form.Control
-							as="textarea"
-							placeholder=" "
-							name="text"
-							value={form.text}
-							onChange={onChange}
-							isInvalid={!!error.text}
-						/>
-						<Form.Control.Feedback type="invalid">
-							{error.text}
-						</Form.Control.Feedback>
-					</FloatingLabel>
+
 					<Form.Check
 						type="checkbox"
-						name="member_only"
+						name="is_online"
 						className="mb-3"
-						label="Member Only"
-						value={form.member_only}
-						checked={form.member_only}
+						label="Online Class"
+						value={form.is_online}
+						checked={form.is_online}
 						onChange={onChange}
 					/>
+
+					<FloatingLabel
+						className="mb-3"
+						label={form.is_online ? "Meeting URL" : "Location"}
+					>
+						<Form.Control
+							type="text"
+							placeholder=" "
+							name="location"
+							value={form.location}
+							onChange={onChange}
+							isInvalid={!!error.location}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.location}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Quota">
+						<Form.Control
+							type="number"
+							placeholder=" "
+							min={1}
+							name="kuota"
+							value={form.kuota}
+							onChange={onChange}
+							isInvalid={!!error.kuota}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.kuota}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<InputGroup className="mb-3">
+						<InputGroup.Text>Rp</InputGroup.Text>
+						<Form.Control
+							type="number"
+							placeholder="Price"
+							min={0}
+							name="price"
+							value={form.price}
+							onChange={onChange}
+							isInvalid={!!error.price}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.price}
+						</Form.Control.Feedback>
+					</InputGroup>
+
+					<Form.Check
+						type="checkbox"
+						name="available_status"
+						className="mb-3"
+						label="Available for booking"
+						value={form.available_status}
+						checked={form.available_status}
+						onChange={onChange}
+					/>
+
+					{action === "add" && (
+						<DateForm
+							date={form.date}
+							setDate={(value) => {
+								setForm((state) => {
+									return { ...state, date: value };
+								});
+							}}
+						/>
+					)}
+
+					{data && (
+						<>
+							<Form.Label>Current Dates</Form.Label>
+							<DateList data={data.date} />
+						</>
+					)}
+
 					<FileUpload
 						image={form.url_image}
 						setImageSrc={(value) => {

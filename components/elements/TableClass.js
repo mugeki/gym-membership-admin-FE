@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import Image from "next/image";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -8,25 +9,23 @@ import {
 	handleDate,
 	handleLowerCase,
 	handleUnauthorized,
-	removeElement,
 } from "../../utils/helper";
+import DateList from "./DateList";
 
 export default function TableClass({
 	entries,
 	setError,
 	onShowModal,
-	onStateChange,
+	refetch,
 }) {
-	const admin = useSelector((state) => state.admin);
-	const onDelete = (id, item) => {
+	// const admin = useSelector((state) => state.admin);
+	const onDelete = (id) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
 			.delete(`${API_URL}/classes/${id}`, generateAxiosConfig())
 			.then(() => {
-				const newData = [...entries];
-				removeElement(newData, item);
-				onStateChange({ data: newData });
-				toast.success("Video deleted", {
+				refetch();
+				toast.success("Class deleted", {
 					position: "top-center",
 					autoClose: 5000,
 					hideProgressBar: false,
@@ -50,13 +49,14 @@ export default function TableClass({
 				<tr>
 					<th>ID</th>
 					<th>Name</th>
-					<th>Image</th>
-					<th>Price</th>
+					<th>Description</th>
+					<th>Type</th>
 					<th>Slots</th>
-					<th>Participant</th>
 					<th>Trainer</th>
-					<th>Schedule</th>
 					<th>Location</th>
+					<th>Price</th>
+					<th>Date</th>
+					<th>Image</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -64,22 +64,28 @@ export default function TableClass({
 				{entries?.map((item, i) => (
 					<tr key={item.id}>
 						<td>{item.id}</td>
-						<td>{item.title}</td>
-						<td>{handleLowerCase(item.classification)}</td>
-						<td>{item.admin_id}</td>
+						<td>{item.name}</td>
+						<td>{item.description}</td>
+						<td>{item.is_online ? "Online" : "Offline"}</td>
 						<td>
-							{item.member_only ? (
-								<Icon icon="bi:check-lg" color="#69ba5b" />
-							) : (
-								<Icon icon="ep:close-bold" color="#cf5151" />
-							)}
+							{item.participant}/{item.kuota}
+						</td>
+						<td>{item.trainer_name}</td>
+						<td>{item.location}</td>
+						<td>Rp{item.price.toLocaleString().replace(/,/g, ".")}</td>
+						<td>
+							<DateList data={item.date} />
 						</td>
 						<td>
-							<a href={item.url} target="_blank" rel="noreferrer">
-								View
-							</a>
+							<Image
+								src={item.url_image}
+								objectFit="cover"
+								width={"170px"}
+								height={"100px"}
+								alt="thumbnail"
+								className="rounded"
+							/>
 						</td>
-						<td>{handleDate(item.created_at)}</td>
 						<td>
 							<>
 								<div
@@ -94,11 +100,16 @@ export default function TableClass({
 												data: {
 													id: item.id,
 													index: i,
-													title: item.title,
-													classification_id: item.classification_id,
-													url: item.url,
-													member_only: item.member_only,
-													admin_id: admin.id,
+													name: item.name,
+													description: item.description,
+													price: item.price,
+													kuota: item.kuota,
+													location: item.location,
+													date: item.date,
+													is_online: item.is_online,
+													available_status: item.available_status,
+													trainer_id: item.trainer_id,
+													url_image: item.url_image,
 												},
 												action: "edit",
 											});
@@ -116,7 +127,7 @@ export default function TableClass({
 									<p
 										className="my-auto ms-1 text-danger"
 										onClick={() => {
-											onDelete(item.id, item);
+											onDelete(item.id);
 										}}
 									>
 										Delete

@@ -16,6 +16,11 @@ module.exports = {
 				destination: "/transactions/classes",
 				permanent: true,
 			},
+			{
+				source: "/",
+				destination: "/transactions/classes",
+				permanent: true,
+			},
 		];
 	},
 	env: {
@@ -24,5 +29,6 @@ module.exports = {
 		BE_API_URL: process.env.BE_API_URL,
 		BE_API_URL_LOCAL: process.env.BE_API_URL_LOCAL,
 		DEFAULT_PROFILE: process.env.DEFAULT_PROFILE,
+		DEFAULT_THUMB: process.env.DEFAULT_THUMB,
 	},
 };

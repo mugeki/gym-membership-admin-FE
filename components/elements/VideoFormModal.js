@@ -66,6 +66,7 @@ export default function VideoFormModal({
 			member_only: false,
 			admin_id: admin.id,
 		});
+		setError({});
 		onHide();
 	};
 
@@ -85,13 +86,14 @@ export default function VideoFormModal({
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
 		} else {
+			const formData = form;
 			const API_URL = process.env.BE_API_URL_LOCAL;
 			if (action === "add") {
 				axios
 					.post(
 						`${API_URL}/videos`,
 						{
-							...form,
+							...formData,
 						},
 						generateAxiosConfig()
 					)
@@ -121,7 +123,7 @@ export default function VideoFormModal({
 					.put(
 						`${API_URL}/videos/${data.id}`,
 						{
-							...form,
+							...formData,
 						},
 						generateAxiosConfig()
 					)
@@ -176,7 +178,7 @@ export default function VideoFormModal({
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="title"
+							name="classification"
 							value={form.classification_id}
 							onChange={onChange}
 						>
@@ -186,9 +188,6 @@ export default function VideoFormModal({
 								</option>
 							))}
 						</Form.Select>
-						<Form.Control.Feedback type="invalid">
-							{error.title}
-						</Form.Control.Feedback>
 					</FloatingLabel>
 
 					<FloatingLabel className="mb-3" label="Video URL">
@@ -201,7 +200,7 @@ export default function VideoFormModal({
 							isInvalid={!!error.url}
 						/>
 						<Form.Control.Feedback type="invalid">
-							{error.title}
+							{error.url}
 						</Form.Control.Feedback>
 					</FloatingLabel>
 					<Form.Check

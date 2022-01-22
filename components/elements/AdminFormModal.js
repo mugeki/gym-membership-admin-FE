@@ -1,17 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Form, Button, Modal, FloatingLabel } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import useValidateForm from "../../hooks/useValidateForm";
-import {
-	generateAxiosConfig,
-	handleLowerCase,
-	handleUnauthorized,
-} from "../../utils/helper";
+import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import FileUpload from "./FileUpload";
 
-export default function NewsletterFormModal({
+export default function AdminFormModal({
 	entries,
 	data,
 	action,
@@ -19,54 +14,35 @@ export default function NewsletterFormModal({
 	onHide,
 	onStateChange,
 }) {
-	const admin = useSelector((state) => state.admin);
 	const [form, setForm] = useState({
-		title: "",
-		classification_id: "",
+		username: "",
+		password: "",
+		email: "",
+		fullname: "",
+		gender: "male",
+		telephone: "",
+		address: "",
 		url_image: "",
-		text: "",
-		member_only: false,
-		admin_id: admin.id,
+		is_super_admin: false,
 	});
 	useEffect(() => {
 		data && setForm(data);
 	}, [data]);
 
-	const [dropdown, setDropdown] = useState();
 	const [error, setError] = useState({});
 	const { validateForm } = useValidateForm();
 
-	useEffect(() => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
-		axios
-			.get(`${API_URL}/classification`, generateAxiosConfig())
-			.then((res) => {
-				const classifications = [];
-				for (const item of res.data.data) {
-					classifications.push(item);
-				}
-				setForm((state) => {
-					return {
-						...state,
-						classification_id: classifications[0].id,
-					};
-				});
-				setDropdown(classifications);
-			})
-			.catch((error) => {
-				handleUnauthorized(error.response);
-				console.log(error);
-			});
-	}, [setForm]);
-
 	const onHideModal = () => {
 		setForm({
-			title: "",
-			classification_id: "",
+			username: "",
+			password: "",
+			email: "",
+			fullname: "",
+			gender: "male",
+			telephone: "",
+			address: "",
 			url_image: "",
-			text: "",
-			member_only: false,
-			admin_id: admin.id,
+			is_super_admin: false,
 		});
 		setError({});
 		onHide();
@@ -75,11 +51,18 @@ export default function NewsletterFormModal({
 	const onChange = (e) => {
 		const name = e.target.name;
 		const value = e.target.value;
-		if (name !== "member_only") {
+		if (name !== "is_super_admin") {
 			setForm({ ...form, [name]: value });
 		} else {
-			setForm({ ...form, [name]: !form.member_only });
+			setForm({ ...form, [name]: !form.is_super_admin });
 		}
+	};
+
+	const onBlur = (e) => {
+		const name = e.target.name;
+		const value = e.target.value;
+		const messages = validateForm(name, value);
+		setError({ ...error, ...messages });
 	};
 
 	const onSubmit = (e) => {
@@ -92,13 +75,13 @@ export default function NewsletterFormModal({
 			delete formData.id;
 			delete formData.index;
 			if (formData.url_image === "") {
-				formData.url_image = process.env.DEFAULT_THUMB;
+				formData.url_image = process.env.DEFAULT_PROFILE;
 			}
 			const API_URL = process.env.BE_API_URL_LOCAL;
 			if (action === "add") {
 				axios
 					.post(
-						`${API_URL}/articles`,
+						`${API_URL}/admins`,
 						{
 							...formData,
 						},
@@ -111,7 +94,7 @@ export default function NewsletterFormModal({
 							newData.pop();
 						}
 						onStateChange({ data: newData });
-						toast.success("Newsletter added", {
+						toast.success("Admin added", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -128,7 +111,7 @@ export default function NewsletterFormModal({
 			} else {
 				axios
 					.put(
-						`${API_URL}/articles/${data.id}`,
+						`${API_URL}/admins/${data.id}`,
 						{
 							...formData,
 						},
@@ -138,7 +121,7 @@ export default function NewsletterFormModal({
 						const newData = [...entries];
 						newData[data.index] = res.data.data;
 						onStateChange({ data: newData });
-						toast.success("Newsletter updated", {
+						toast.success("Admin updated", {
 							position: "top-center",
 							autoClose: 5000,
 							hideProgressBar: false,
@@ -163,61 +146,122 @@ export default function NewsletterFormModal({
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
+			scrollable
 		>
 			<Modal.Header closeButton></Modal.Header>
 			<Modal.Body className="p-5">
 				<Form noValidate onSubmit={onSubmit}>
-					<FloatingLabel className="mb-3" label="Title">
+					<FloatingLabel className="mb-3" label="Username">
 						<Form.Control
 							type="text"
 							placeholder=" "
-							name="title"
-							value={form.title}
+							name="username"
+							value={form.username}
 							onChange={onChange}
-							isInvalid={!!error.title}
+							onBlur={onBlur}
+							isInvalid={!!error.username}
 						/>
 						<Form.Control.Feedback type="invalid">
-							{error.title}
+							{error.username}
 						</Form.Control.Feedback>
 					</FloatingLabel>
 
-					<FloatingLabel className="mb-3" label="Classification">
-						<Form.Select
-							type="text"
-							placeholder=" "
-							name="title"
-							value={form.classification_id}
-							onChange={onChange}
-						>
-							{dropdown?.map((item, i) => (
-								<option key={i} value={item.id}>
-									{handleLowerCase(item.name)}
-								</option>
-							))}
-						</Form.Select>
-					</FloatingLabel>
-					<FloatingLabel className="mb-3" label="Text">
+					<FloatingLabel className="mb-3" label="Password">
 						<Form.Control
-							as="textarea"
+							type="password"
 							placeholder=" "
-							name="text"
-							value={form.text}
+							name="password"
+							value={form.password}
 							onChange={onChange}
-							isInvalid={!!error.text}
+							onBlur={onBlur}
+							isInvalid={!!error.password}
 						/>
 						<Form.Control.Feedback type="invalid">
-							{error.text}
+							{error.password}
 						</Form.Control.Feedback>
 					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Email">
+						<Form.Control
+							type="email"
+							placeholder=" "
+							name="email"
+							value={form.email}
+							onChange={onChange}
+							onBlur={onBlur}
+							isInvalid={!!error.email}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.email}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Name">
+						<Form.Control
+							type="text"
+							placeholder=" "
+							name="fullname"
+							value={form.fullname}
+							onChange={onChange}
+							onBlur={onBlur}
+							isInvalid={!!error.fullname}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.fullname}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Gender">
+						<Form.Select
+							placeholder=" "
+							name="gender"
+							value={form.gender}
+							onChange={onChange}
+						>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</Form.Select>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Phone Number">
+						<Form.Control
+							type="tel"
+							placeholder=" "
+							name="telephone"
+							value={form.telephone}
+							onChange={onChange}
+							onBlur={onBlur}
+							isInvalid={!!error.telephone}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.telephone}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
+					<FloatingLabel className="mb-3" label="Address">
+						<Form.Control
+							type="text"
+							placeholder=" "
+							name="address"
+							value={form.address}
+							onChange={onChange}
+							isInvalid={!!error.address}
+						/>
+						<Form.Control.Feedback type="invalid">
+							{error.address}
+						</Form.Control.Feedback>
+					</FloatingLabel>
+
 					<Form.Check
 						type="checkbox"
-						name="member_only"
+						name="is_super_admin"
 						className="mb-3"
-						label="Member Only"
-						value={form.member_only}
-						checked={form.member_only}
+						label="Super Admin"
+						value={form.is_super_admin}
+						checked={form.is_super_admin}
 						onChange={onChange}
 					/>
+
 					<FileUpload
 						image={form.url_image}
 						setImageSrc={(value) => {

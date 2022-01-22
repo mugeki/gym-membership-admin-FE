@@ -147,7 +147,9 @@ export default function Videos() {
 								setModalProps(value);
 								setModalShow(true);
 							}}
-							onStateChange={onStateChange}
+							refetch={() => {
+								fetch(videos.currPage, filter);
+							}}
 						/>
 					)}
 					{error && <p className="text-center text-light mt-5">{error}</p>}

@@ -40,8 +40,9 @@ export default function FileUpload({ image, setImageSrc }) {
 					src={image || ""}
 					width={"160px"}
 					height={"120px"}
-					alt={"newsletter"}
-					className={"rounded"}
+					alt="file"
+					objectFit="cover"
+					className="rounded"
 				/>
 			) : (
 				<div className={loading ? "d-none" : "d-flex flex-column"}>
