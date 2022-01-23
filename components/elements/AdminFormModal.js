@@ -71,7 +71,7 @@ export default function AdminFormModal({
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
 		} else {
-			const formData = form;
+			const formData = { ...form };
 			delete formData.id;
 			delete formData.index;
 			if (formData.url_image === "") {

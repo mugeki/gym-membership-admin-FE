@@ -45,22 +45,18 @@ export default function useHandleDate() {
 		};
 	};
 
-	const newDateByDay = (day, hours, minute) => {
-		const now = new Date(Date.now() + 604800000);
-		const date = new Date(
-			now.getFullYear(),
-			now.getMonth(),
-			day,
-			hours,
-			minute
-		);
-		return date.toISOString();
+	const newDateByDay = (day, hours, minute, weekIter) => {
+		const date = new Date(day);
+		date.setHours(hours);
+		date.setMinutes(minute);
+		const result = new Date(date.setDate(date.getDate() + weekIter * 7));
+		return result.toISOString();
 	};
 
 	const parseDateList = (scheduleString) => {
 		const listSchedule = scheduleString.split(";");
 		let listScheduleFormatted = [];
-		for (var i = 0; i < listSchedule.length; i++) {
+		for (var i = 0; i < listSchedule.length - 1; i++) {
 			var oneSchedule = listSchedule[i].split(",");
 			var dateStart = formatDatetime(oneSchedule[0]);
 			var dateEnd = formatDatetime(oneSchedule[1]);
@@ -74,17 +70,17 @@ export default function useHandleDate() {
 		return listScheduleFormatted;
 	};
 
-	const newDateList = (scheduleArray) => {
-		// const array
-		scheduleArray.pop();
-		scheduleArray.sort((a, b) => a.day - b.day);
+	const newDateList = (scheduleArray, iteration) => {
+		scheduleArray.sort((a, b) => new Date(a.day) - new Date(b.day));
 		let dateList = "";
 		for (const item of scheduleArray) {
-			const timeStart = item.time_start.split(":");
-			const timeEnd = item.time_end.split(":");
-			const dateStart = newDateByDay(item.day, timeStart[0], timeStart[1]);
-			const dateEnd = newDateByDay(item.day, timeEnd[0], timeEnd[1]);
-			dateList += dateStart + "," + dateEnd + ";";
+			for (let i = 0; i < iteration; i++) {
+				const timeStart = item.time_start.split(":");
+				const timeEnd = item.time_end.split(":");
+				const dateStart = newDateByDay(item.day, timeStart[0], timeStart[1], i);
+				const dateEnd = newDateByDay(item.day, timeEnd[0], timeEnd[1], i);
+				dateList += dateStart + "," + dateEnd + ";";
+			}
 		}
 		return dateList;
 	};

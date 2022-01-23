@@ -50,9 +50,47 @@ export default function useValidateForm() {
 				}
 			}
 		}
-
 		return messages;
 	};
 
-	return { validateForm };
+	const validateDateForm = (formValue) => {
+		let messages = {};
+
+		let i = 0;
+		var _ = require("lodash");
+		for (const item of formValue) {
+			if (item.day === "") {
+				_.set(messages, `date_${i}.day`, "Field cannot be empty");
+			} else {
+				_.set(messages, `date_${i}.day`, "");
+			}
+
+			if (item.time_end === "") {
+				_.set(messages, `date_${i}.time_end`, "Field cannot be empty");
+			} else {
+				_.set(messages, `date_${i}.time_end`, "");
+			}
+
+			if (item.time_start === "") {
+				_.set(messages, `date_${i}.time_start`, "Field cannot be empty");
+			} else {
+				_.set(messages, `date_${i}.time_start`, "");
+			}
+
+			if (item.time_end < item.time_start) {
+				_.set(
+					messages,
+					`date_${i}.time_end`,
+					"End time must be greater than start time"
+				);
+			} else {
+				_.set(messages, `date_${i}.time_end`, "");
+			}
+
+			i++;
+		}
+		return messages;
+	};
+
+	return { validateForm, validateDateForm };
 }

@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useHandleDate from "../../hooks/useHandleDate";
 import useValidateForm from "../../hooks/useValidateForm";
 import {
+	checkNestedEmpty,
 	generateAxiosConfig,
 	handleLowerCase,
 	handleUnauthorized,
@@ -33,7 +34,8 @@ export default function ClassFormModal({
 		price: "",
 		kuota: "",
 		location: "",
-		date: [{ day: "1", time_start: "", time_end: "" }],
+		date: [{ day: "", time_start: "", time_end: "" }],
+		weeks: "",
 		is_online: false,
 		available_status: false,
 		trainer_id: "",
@@ -45,7 +47,7 @@ export default function ClassFormModal({
 
 	const [dropdown, setDropdown] = useState();
 	const [error, setError] = useState({});
-	const { validateForm } = useValidateForm();
+	const { validateForm, validateDateForm } = useValidateForm();
 	const { newDateList } = useHandleDate();
 
 	useEffect(() => {
@@ -78,7 +80,8 @@ export default function ClassFormModal({
 			price: "",
 			kuota: "",
 			location: "",
-			date: [{ day: "1", time_start: "", time_end: "" }],
+			date: [{ day: "", time_start: "", time_end: "" }],
+			weeks: "",
 			is_online: false,
 			available_status: false,
 			trainer_id: "",
@@ -102,17 +105,30 @@ export default function ClassFormModal({
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-		const newErrors = validateForm(undefined, undefined, form);
+		const newErrors = {
+			...validateForm(undefined, undefined, form),
+			...validateDateForm(form.date),
+		};
+		for (const key in newErrors) {
+			if (
+				key.includes("date") &&
+				checkNestedEmpty(newErrors[key], "day") &&
+				checkNestedEmpty(newErrors[key], "time_start") &&
+				checkNestedEmpty(newErrors[key], "time_end")
+			) {
+				delete newErrors[key];
+			}
+		}
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
 		} else {
-			const formData = form;
+			const formData = { ...form };
 			delete formData.id;
 			delete formData.index;
 			formData.price = parseInt(formData.price);
 			formData.kuota = parseInt(formData.kuota);
-			formData.date = newDateList(formData.date);
-			console.log("formData.date", formData.date);
+			formData.date = newDateList(formData.date, formData.weeks);
+			delete formData.weeks;
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
@@ -177,10 +193,6 @@ export default function ClassFormModal({
 			}
 		}
 	};
-
-	useEffect(() => {
-		console.log("form", form);
-	}, [form]);
 
 	return (
 		<Modal
@@ -307,19 +319,37 @@ export default function ClassFormModal({
 					/>
 
 					{action === "add" && (
-						<DateForm
-							date={form.date}
-							setDate={(value) => {
-								setForm((state) => {
-									return { ...state, date: value };
-								});
-							}}
-						/>
+						<>
+							<DateForm
+								error={error}
+								setDate={(value) => {
+									setForm((state) => {
+										return { ...state, date: value };
+									});
+								}}
+							/>
+							<InputGroup className="mb-3">
+								<InputGroup.Text>Set schedule for</InputGroup.Text>
+								<Form.Control
+									type="number"
+									placeholder="ex: 4"
+									min={1}
+									name="weeks"
+									value={form.weeks}
+									onChange={onChange}
+									isInvalid={!!error.weeks}
+								/>
+								<InputGroup.Text>weeks</InputGroup.Text>
+								<Form.Control.Feedback type="invalid">
+									{error.weeks}
+								</Form.Control.Feedback>
+							</InputGroup>
+						</>
 					)}
 
 					{data && (
 						<>
-							<Form.Label>Current Dates</Form.Label>
+							<Form.Label>Schedules</Form.Label>
 							<DateList data={data.date} />
 						</>
 					)}

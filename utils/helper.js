@@ -47,6 +47,12 @@ function removeElement(array, item) {
 	return array;
 }
 
+function checkNestedEmpty(obj, level, ...rest) {
+	if (obj === undefined) return false;
+	if (rest.length == 0 && obj[level] === "") return true;
+	return checkNestedEmpty(obj[level], ...rest);
+}
+
 export {
 	handleUnauthorized,
 	redirect,
@@ -54,4 +60,5 @@ export {
 	handleDate,
 	generateAxiosConfig,
 	removeElement,
+	checkNestedEmpty,
 };

@@ -86,7 +86,7 @@ export default function VideoFormModal({
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
 		} else {
-			const formData = form;
+			const formData = { ...form };
 			const API_URL = process.env.BE_API_URL_LOCAL;
 			if (action === "add") {
 				axios
