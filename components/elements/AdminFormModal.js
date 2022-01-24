@@ -29,6 +29,7 @@ export default function AdminFormModal({
 		data && setForm(data);
 	}, [data]);
 
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState({});
 	const { validateForm } = useValidateForm();
 
@@ -68,6 +69,9 @@ export default function AdminFormModal({
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const newErrors = validateForm(undefined, undefined, form);
+		if (action === "edit" && form.password === "") {
+			delete newErrors.password;
+		}
 		if (Object.keys(newErrors).length > 0) {
 			setError(newErrors);
 		} else {
@@ -269,8 +273,12 @@ export default function AdminFormModal({
 								return { ...state, url_image: value };
 							});
 						}}
+						loading={loading}
+						setLoading={(value) => {
+							setLoading(value);
+						}}
 					/>
-					<Button variant="primary w-100 mt-3" type="submit">
+					<Button variant="primary w-100 mt-3" type="submit" disabled={loading}>
 						Submit
 					</Button>
 				</Form>

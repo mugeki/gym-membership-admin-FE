@@ -30,6 +30,7 @@ export default function MembershipFormModal({
 		data && setForm(data);
 	}, [data]);
 
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState({});
 	const { validateForm } = useValidateForm();
 
@@ -190,8 +191,12 @@ export default function MembershipFormModal({
 								return { ...state, url_image: value };
 							});
 						}}
+						loading={loading}
+						setLoading={(value) => {
+							setLoading(value);
+						}}
 					/>
-					<Button variant="primary w-100 mt-3" type="submit">
+					<Button variant="primary w-100 mt-3" type="submit" disabled={loading}>
 						Submit
 					</Button>
 				</Form>

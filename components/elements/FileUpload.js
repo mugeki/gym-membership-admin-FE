@@ -6,8 +6,12 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { Spinner } from "react-bootstrap";
 
-export default function FileUpload({ image, setImageSrc }) {
-	const [loading, setLoading] = useState();
+export default function FileUpload({
+	image,
+	setImageSrc,
+	loading,
+	setLoading,
+}) {
 	const onChange = (e) => {
 		if (app) {
 			const file = e.target.files[0];

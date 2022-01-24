@@ -45,6 +45,7 @@ export default function ClassFormModal({
 		data && setForm(data);
 	}, [data]);
 
+	const [loading, setLoading] = useState(false);
 	const [dropdown, setDropdown] = useState();
 	const [error, setError] = useState({});
 	const { validateForm, validateDateForm } = useValidateForm();
@@ -127,13 +128,13 @@ export default function ClassFormModal({
 			delete formData.index;
 			formData.price = parseInt(formData.price);
 			formData.kuota = parseInt(formData.kuota);
-			formData.date = newDateList(formData.date, formData.weeks);
 			delete formData.weeks;
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
 			const API_URL = process.env.BE_API_URL_LOCAL;
 			if (action === "add") {
+				formData.date = newDateList(formData.date, formData.weeks);
 				axios
 					.post(
 						`${API_URL}/classes`,
@@ -361,8 +362,12 @@ export default function ClassFormModal({
 								return { ...state, url_image: value };
 							});
 						}}
+						loading={loading}
+						setLoading={(value) => {
+							setLoading(value);
+						}}
 					/>
-					<Button variant="primary w-100 mt-3" type="submit">
+					<Button variant="primary w-100 mt-3" type="submit" disabled={loading}>
 						Submit
 					</Button>
 				</Form>
