@@ -4,27 +4,26 @@ import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
 import { Icon } from "@iconify/react";
-import TableAdmin from "../../components/elements/TableAdmin";
-import AdminFormModal from "../../components/elements/AdminFormModal";
+import TableMembership from "../../components/elements/TableMembership";
+import MembershipFormModal from "../../components/elements/MembershipFormModal";
 
-export default function Admins() {
+export default function Memberships() {
 	const [modalShow, setModalShow] = useState(false);
-	const [admins, setAdmins] = useState({
+	const [memberships, setMemberships] = useState({
 		data: [],
 		currPage: 1,
 		pages: [],
 	});
-	const [filter, setFilter] = useState("");
 	const [error, setError] = useState();
 	const [modalProps, setModalProps] = useState();
 
-	const fetch = (page, name) => {
+	const fetch = (page) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
-			.get(`${API_URL}/admins?name=${name}&page=${page}`, generateAxiosConfig())
+			.get(`${API_URL}/membership-products?page=${page}`, generateAxiosConfig())
 			.then((res) => {
 				if (res.status === 204) {
-					setAdmins({
+					setMemberships({
 						data: [],
 						currPage: 1,
 						pages: [],
@@ -38,7 +37,7 @@ export default function Admins() {
 					for (let i = 0; i < length; i++) {
 						items.push(i + 1);
 					}
-					setAdmins((state) => {
+					setMemberships((state) => {
 						return {
 							...state,
 							data: res.data.data,
@@ -59,36 +58,31 @@ export default function Admins() {
 	};
 
 	useEffect(() => {
-		fetch(1, "");
-	}, [setAdmins]);
+		fetch(1);
+	}, [setMemberships]);
 
 	const handlePage = (index) => {
 		fetch(index, filter);
 	};
 
-	const onChange = (e) => {
-		const value = e.target.value;
-		setFilter(value);
-	};
-
 	const onStateChange = (value) => {
-		setAdmins((state) => {
+		setMemberships((state) => {
 			return { ...state, ...value };
 		});
 	};
 
 	return (
 		<Layout>
-			<AdminFormModal
+			<MembershipFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
-				entries={admins?.data}
+				entries={memberships?.data}
 				data={modalProps?.data}
 				action={modalProps?.action}
 				onStateChange={onStateChange}
 			/>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
-				<h1 className="text-end mb-5">Admins</h1>
+				<h1 className="text-end mb-5">Memberships</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-between mb-3">
 					<div className="d-flex">
 						<Button
@@ -107,58 +101,37 @@ export default function Admins() {
 							variant="outline-primary w-100"
 							className="mb-3 ms-2 mb-md-0"
 							onClick={() => {
-								fetch(1, filter);
+								fetch(1);
 							}}
 						>
 							Refresh
 						</Button>
 					</div>
-
-					<div className="d-flex">
-						<InputGroup>
-							<FormControl
-								type="search"
-								name="name"
-								placeholder="Find name"
-								aria-label="Search"
-								value={filter}
-								onChange={onChange}
-							/>
-							<Button
-								variant="primary"
-								onClick={() => {
-									fetch(1, filter);
-								}}
-							>
-								<Icon icon="ant-design:search-outlined" />
-							</Button>
-						</InputGroup>
-					</div>
 				</div>
 
 				<div className="mb-2">
-					{admins.data && (
-						<TableAdmin
-							entries={admins.data}
+					{memberships.data && (
+						<TableMembership
+							entries={memberships.data}
 							setError={setError}
 							onShowModal={(value) => {
 								setModalProps(value);
 								setModalShow(true);
 							}}
 							refetch={() => {
-								fetch(admins.currPage, filter);
+								fetch(memberships.currPage);
 							}}
 						/>
 					)}
 					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
-				{admins && (
+				{memberships && (
 					<Pagination className="align-self-center">
-						{admins.pages.map((item) => (
+						{memberships.pages.map((item) => (
 							<Pagination.Item
 								key={item}
-								active={item === admins.currPage}
+								active={item === memberships.currPage}
 								onClick={() => handlePage(item)}
 							>
 								{item}

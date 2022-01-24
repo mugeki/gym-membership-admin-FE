@@ -3,13 +3,13 @@ import { FormControl, Pagination, Button, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import axios from "axios";
+import VideoFormModal from "../../components/elements/VideoFormModal";
+import TableVideo from "../../components/elements/TableVideo";
 import { Icon } from "@iconify/react";
-import TableAdmin from "../../components/elements/TableAdmin";
-import AdminFormModal from "../../components/elements/AdminFormModal";
 
-export default function Admins() {
+export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
-	const [admins, setAdmins] = useState({
+	const [videos, setVideos] = useState({
 		data: [],
 		currPage: 1,
 		pages: [],
@@ -18,13 +18,16 @@ export default function Admins() {
 	const [error, setError] = useState();
 	const [modalProps, setModalProps] = useState();
 
-	const fetch = (page, name) => {
+	const fetch = (page, title) => {
 		const API_URL = process.env.BE_API_URL_LOCAL;
 		axios
-			.get(`${API_URL}/admins?name=${name}&page=${page}`, generateAxiosConfig())
+			.get(
+				`${API_URL}/videos?title=${title}&page=${page}`,
+				generateAxiosConfig()
+			)
 			.then((res) => {
 				if (res.status === 204) {
-					setAdmins({
+					setVideos({
 						data: [],
 						currPage: 1,
 						pages: [],
@@ -38,7 +41,7 @@ export default function Admins() {
 					for (let i = 0; i < length; i++) {
 						items.push(i + 1);
 					}
-					setAdmins((state) => {
+					setVideos((state) => {
 						return {
 							...state,
 							data: res.data.data,
@@ -60,7 +63,7 @@ export default function Admins() {
 
 	useEffect(() => {
 		fetch(1, "");
-	}, [setAdmins]);
+	}, [setVideos]);
 
 	const handlePage = (index) => {
 		fetch(index, filter);
@@ -72,23 +75,23 @@ export default function Admins() {
 	};
 
 	const onStateChange = (value) => {
-		setAdmins((state) => {
+		setVideos((state) => {
 			return { ...state, ...value };
 		});
 	};
 
 	return (
 		<Layout>
-			<AdminFormModal
+			<VideoFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
-				entries={admins?.data}
+				entries={videos?.data}
 				data={modalProps?.data}
 				action={modalProps?.action}
 				onStateChange={onStateChange}
 			/>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
-				<h1 className="text-end mb-5">Admins</h1>
+				<h1 className="text-end mb-5">Videos</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-between mb-3">
 					<div className="d-flex">
 						<Button
@@ -113,13 +116,12 @@ export default function Admins() {
 							Refresh
 						</Button>
 					</div>
-
 					<div className="d-flex">
 						<InputGroup>
 							<FormControl
 								type="search"
-								name="name"
-								placeholder="Find name"
+								name="title"
+								placeholder="Find title"
 								aria-label="Search"
 								value={filter}
 								onChange={onChange}
@@ -137,28 +139,28 @@ export default function Admins() {
 				</div>
 
 				<div className="mb-2">
-					{admins.data && (
-						<TableAdmin
-							entries={admins.data}
+					{videos.data && (
+						<TableVideo
+							entries={videos.data}
 							setError={setError}
 							onShowModal={(value) => {
 								setModalProps(value);
 								setModalShow(true);
 							}}
 							refetch={() => {
-								fetch(admins.currPage, filter);
+								fetch(videos.currPage, filter);
 							}}
 						/>
 					)}
 					{error && <p className="text-center text-light mt-5">{error}</p>}
 				</div>
 
-				{admins && (
+				{videos && (
 					<Pagination className="align-self-center">
-						{admins.pages.map((item) => (
+						{videos.pages.map((item) => (
 							<Pagination.Item
 								key={item}
-								active={item === admins.currPage}
+								active={item === videos.currPage}
 								onClick={() => handlePage(item)}
 							>
 								{item}

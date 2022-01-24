@@ -12,9 +12,13 @@ body {
 
 html,
 body,
-div#__next,
-div.pro-sidebar-inner {
+div#__next {
 	min-height: 100vh !important;
+}
+
+div.pro-sidebar,
+div.pro-sidebar-inner {
+	min-height: 100vh;
 }
 
 a {
