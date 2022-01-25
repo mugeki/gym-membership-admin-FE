@@ -18,7 +18,7 @@ jobs:
           NEXT_PUBLIC_DEFAULT_PROFILE: ${{ secrets.DEFAULT_PROFILE }}
           NEXT_PUBLIC_DEFAULT_THUMB: ${{ secrets.DEFAULT_THUMB }}
         with:
-          name: mugeki/gym-membership-fe
+          name: mugeki/gym-membership-admin-fe
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile
