@@ -4,14 +4,22 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM node:16-alpine as builder
+ARG NEXT_PUBLIC_BE_API_URL
+ARG NEXT_PUBLIC_DEFAULT_PROFILE
+ARG NEXT_PUBLIC_DEFAULT_THUMB
+
+ENV NEXT_PUBLIC_BE_API_URL=$NEXT_PUBLIC_BE_API_URL
+ENV NEXT_PUBLIC_DEFAULT_PROFILE=$NEXT_PUBLIC_DEFAULT_PROFILE
+ENV NEXT_PUBLIC_DEFAULT_THUMB=$NEXT_PUBLIC_DEFAULT_THUMB
+
 WORKDIR /app
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
-RUN npm run build
+ARG NODE_ENV=production
+RUN NODE_ENV=${NODE_ENV} npm run build
 
 FROM node:16-alpine as runner
 WORKDIR /app
-ENV NODE_ENV production
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
