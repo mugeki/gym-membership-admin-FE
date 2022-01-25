@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { generateAxiosConfig, handleUnauthorized } from "../../../utils/helper";
 import axios from "axios";
 import TableMembershipTransaction from "../../../components/elements/TableMembershipTransaction";
+import Head from "next/head";
 
 export default function MembershipsTransactions() {
 	const [transactions, setTransactions] = useState({
@@ -107,6 +108,10 @@ export default function MembershipsTransactions() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Membership Transactions | Alta2Gym Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">
 				<h1 className="text-end mb-5">Memberships Transactions</h1>
 				<div className="d-flex flex-column flex-md-row justify-content-end mb-3">

@@ -6,6 +6,7 @@ import axios from "axios";
 import VideoFormModal from "../../components/elements/VideoFormModal";
 import TableVideo from "../../components/elements/TableVideo";
 import { Icon } from "@iconify/react";
+import Head from "next/head";
 
 export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
@@ -82,6 +83,10 @@ export default function Videos() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Videos | Alta2Gym Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<VideoFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}

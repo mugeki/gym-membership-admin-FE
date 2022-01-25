@@ -4,6 +4,7 @@ import { container } from "../../styles/Login.module.css";
 import axios from "axios";
 import useValidateForm from "../../hooks/useValidateForm";
 import useHandleLogin from "../../hooks/useHandleLogin";
+import Head from "next/head";
 
 export default function Login() {
 	const handleLogin = useHandleLogin();
@@ -53,6 +54,10 @@ export default function Login() {
 		<div
 			className={`${container} box d-flex flex-column border rounded px-4 py-5 position-absolute top-50 start-50 translate-middle`}
 		>
+			<Head>
+				<title>Login | Alta2Gym Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<h4 className="fw-bolder text-center text-primary mb-4">Admin Login</h4>
 			<Form className="px-4" noValidate onSubmit={onSubmit}>
 				<p className="text-danger text-center">{errorMsg.auth}</p>

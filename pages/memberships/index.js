@@ -6,6 +6,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import TableMembership from "../../components/elements/TableMembership";
 import MembershipFormModal from "../../components/elements/MembershipFormModal";
+import Head from "next/head";
 
 export default function Memberships() {
 	const [modalShow, setModalShow] = useState(false);
@@ -73,6 +74,10 @@ export default function Memberships() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Memberships | Alta2Gym Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<MembershipFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}

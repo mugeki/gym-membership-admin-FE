@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react";
 import NewsletterFormModal from "../../components/elements/NewsletterFormModal";
 import TableClass from "../../components/elements/TableClass";
 import ClassFormModal from "../../components/elements/ClassFormModal";
+import Head from "next/head";
 
 export default function Classes() {
 	const [modalShow, setModalShow] = useState(false);
@@ -83,6 +84,10 @@ export default function Classes() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Classes | Alta2Gym Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<ClassFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
