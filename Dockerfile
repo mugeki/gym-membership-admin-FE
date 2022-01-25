@@ -16,6 +16,7 @@ WORKDIR /app
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 ARG NODE_ENV=production
+RUN echo ${NODE_ENV}
 RUN NODE_ENV=${NODE_ENV} npm run build
 
 FROM node:16-alpine as runner
