@@ -16,7 +16,7 @@ export default function TableAdmin({
 	refetch,
 }) {
 	const onDelete = (id) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.delete(`${API_URL}/admins/${id}`, generateAxiosConfig())
 			.then(() => {

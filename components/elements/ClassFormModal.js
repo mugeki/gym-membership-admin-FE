@@ -52,7 +52,7 @@ export default function ClassFormModal({
 	const { newDateList } = useHandleDate();
 
 	useEffect(() => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/trainers`, generateAxiosConfig())
 			.then((res) => {
@@ -132,7 +132,7 @@ export default function ClassFormModal({
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				formData.date = newDateList(formData.date, formData.weeks);
 				axios

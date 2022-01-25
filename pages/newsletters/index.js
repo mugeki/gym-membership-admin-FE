@@ -19,7 +19,7 @@ export default function Newsletters() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page, title) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(
 				`${API_URL}/articles?title=${title}&page=${page}`,

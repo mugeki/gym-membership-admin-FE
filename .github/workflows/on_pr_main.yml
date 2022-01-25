@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  build-push-docker:
+    name: Build docker image then push to docker hub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: docker build -t mugeki/gym-membership-admin-fe:1.0.0 .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push image to Docker Hub
+        run: docker push mugeki/gym-membership-admin-fe:1.0.0
+
+  deployment-ec2-aws:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-latest
+    needs: build-push-docker
+    steps:
+      - uses: actions/checkout@v2
+      - name: SSH Config
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/gym-membership.pem
+          chmod 400 ~/.ssh/gym-membership.pem
+          cat >>~/.ssh/config <<END
+          Host development
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/gym-membership.pem
+            StrictHostKeyChecking=no
+          END
+      - name: Connect to EC2 instance & run Docker image from registry
+        run: |
+          ssh development '
+          docker rm -vf gym-membership-admin-fe && \
+          docker pull mugeki/gym-membership-admin-fe:1.0.0 && \
+          docker run -d -p 80:80 --name gym-membership-admin-fe \
+          mugeki/gym-membership-admin-fe:1.0.0'

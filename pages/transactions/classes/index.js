@@ -24,7 +24,7 @@ export default function ClassTransactions() {
 	const [error, setError] = useState();
 
 	const fetch = (page, status, date) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(
 				`${API_URL}/transaction-class?status=${status}&page=${page}&date=${date}`,

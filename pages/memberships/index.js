@@ -18,7 +18,7 @@ export default function Memberships() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/membership-products?page=${page}`, generateAxiosConfig())
 			.then((res) => {

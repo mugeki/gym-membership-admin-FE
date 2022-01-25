@@ -20,7 +20,7 @@ export default function TableClass({
 }) {
 	// const admin = useSelector((state) => state.admin);
 	const onDelete = (id) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.delete(`${API_URL}/classes/${id}`, generateAxiosConfig())
 			.then(() => {

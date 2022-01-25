@@ -24,7 +24,7 @@ export default function MembershipsTransactions() {
 	const [error, setError] = useState();
 
 	const fetch = (page, status, date) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(
 				`${API_URL}/transaction-membership?status=${status}&page=${page}&date=${date}`,

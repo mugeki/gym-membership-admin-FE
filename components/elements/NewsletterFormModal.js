@@ -38,7 +38,7 @@ export default function NewsletterFormModal({
 	const { validateForm } = useValidateForm();
 
 	useEffect(() => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/classification`, generateAxiosConfig())
 			.then((res) => {
@@ -95,7 +95,7 @@ export default function NewsletterFormModal({
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				axios
 					.post(

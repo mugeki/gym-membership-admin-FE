@@ -36,7 +36,7 @@ export default function VideoFormModal({
 	const { validateForm } = useValidateForm();
 
 	useEffect(() => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/classification`, generateAxiosConfig())
 			.then((res) => {
@@ -87,7 +87,7 @@ export default function VideoFormModal({
 			setError(newErrors);
 		} else {
 			const formData = { ...form };
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				axios
 					.post(

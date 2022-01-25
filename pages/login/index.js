@@ -32,7 +32,7 @@ export default function Login() {
 			setErrorMsg(newErrors);
 		} else {
 			// const API_URL = process.env.BE_API_URL;
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			axios
 				.post(`${API_URL}/admins/login`, {
 					...form,
