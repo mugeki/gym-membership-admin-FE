@@ -24,11 +24,8 @@ module.exports = {
 		];
 	},
 	env: {
-		YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
-		GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-		BE_API_URL: process.env.BE_API_URL,
-		BE_API_URL_LOCAL: process.env.BE_API_URL_LOCAL,
-		DEFAULT_PROFILE: process.env.DEFAULT_PROFILE,
-		DEFAULT_THUMB: process.env.DEFAULT_THUMB,
+		BE_API_URL: process.env.NEXT_PUBLIC_BE_API_URL,
+		DEFAULT_PROFILE: process.env.NEXT_PUBLIC_DEFAULT_PROFILE,
+		DEFAULT_THUMB: process.env.NEXT_PUBLIC_DEFAULT_THUMB,
 	},
 };
