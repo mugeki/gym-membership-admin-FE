@@ -1,6 +1,9 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
 import { Table } from "react-bootstrap";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
 	generateAxiosConfig,
@@ -36,6 +39,7 @@ export default function TableClassTransaction({
 				}
 			});
 	};
+
 	return (
 		<Table hover responsive>
 			<thead className="bg-primary text-white">
@@ -44,6 +48,7 @@ export default function TableClassTransaction({
 					<th>User</th>
 					<th>Class</th>
 					<th>Date</th>
+					<th>Total</th>
 					<th>Payment</th>
 					<th>Receipt</th>
 					<th>Status</th>
@@ -62,11 +67,20 @@ export default function TableClassTransaction({
 						</td>
 						<td>{item.product_name}</td>
 						<td>{handleDate(item.created_at)}</td>
+						<td>Rp{item.nominal.toLocaleString().replace(/,/g, ".")}</td>
 						<td>{item.payment.name}</td>
 						<td>
-							<a href={""} target="_blank" rel="noreferrer">
-								View
-							</a>
+							{item.url_image_of_receipt ? (
+								<a
+									href={item.url_image_of_receipt}
+									target="_blank"
+									rel="noreferrer"
+								>
+									View
+								</a>
+							) : (
+								"No receipt"
+							)}
 						</td>
 						<td>
 							<div
