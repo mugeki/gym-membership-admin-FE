@@ -7,7 +7,6 @@ import {
 	SubMenu,
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
-import "../../styles/Navbar.module.css";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,81 +27,85 @@ export default function Navbar({ toggled, onToggleSidebar }) {
 	};
 
 	return (
-		<ProSidebar toggled={toggled} onToggle={onToggleSidebar} breakPoint="lg">
-			<SidebarHeader className="d-flex flex-nowrap align-items-center border-white p-4">
-				<Image
-					src={admin.url_image}
-					width={"100px"}
-					height={"100px"}
-					objectFit="cover"
-					className="rounded-circle"
-					alt="profile"
-				/>
-				<div className="d-flex flex-column px-3 w-100">
-					<p
-						className="m-0 fw-bolder d-inline-block text-truncate"
-						style={{ maxWidth: "130px" }}
-					>
-						{admin.fullname}
-					</p>
-					<p
-						className="m-0"
-						style={{ cursor: "pointer", fontSize: "14px" }}
-						onClick={onLogout}
-					>
-						Logout
-					</p>
-				</div>
-			</SidebarHeader>
-			<SidebarContent className="py-4 h-100">
-				<Menu iconShape="circle">
-					<MenuItem
-						active={router.pathname === "/admins"}
-						icon={<Icon icon="akar-icons:person" />}
-						hidden={!admin.is_super_admin}
-					>
-						<Link href={"/admins"}>Admins</Link>
-					</MenuItem>
-					<MenuItem
-						active={router.pathname === "/classes"}
-						icon={<Icon icon="ic:baseline-schedule" />}
-						hidden={!admin.is_super_admin}
-					>
-						<Link href={"/classes"}>Classes</Link>
-					</MenuItem>
-
-					<MenuItem
-						active={router.pathname === "/memberships"}
-						icon={<Icon icon="ic:baseline-card-membership" />}
-						hidden={!admin.is_super_admin}
-					>
-						<Link href={"/memberships"}>Memberships</Link>
-					</MenuItem>
-
-					<MenuItem
-						active={router.pathname === "/newsletters"}
-						icon={<Icon icon="fluent:news-16-regular" />}
-						hidden={!admin.is_super_admin}
-					>
-						<Link href={"/newsletters"}>Newsletters</Link>
-					</MenuItem>
-					<SubMenu title="Transactions" icon={<Icon icon="carbon:receipt" />}>
-						<MenuItem active={router.pathname === "/transactions/classes"}>
-							<Link href={"/transactions/classes"}>Classes</Link>
+		<div className="sticky-top">
+			<ProSidebar toggled={toggled} onToggle={onToggleSidebar} breakPoint="lg">
+				<SidebarHeader className="d-flex flex-nowrap align-items-center border-white p-4">
+					<Image
+						src={admin.url_image}
+						width={"100px"}
+						height={"100px"}
+						objectFit="cover"
+						className="rounded-circle"
+						alt="profile"
+					/>
+					<div className="d-flex flex-column px-3 w-100">
+						<p
+							className="m-0 fw-bolder d-inline-block text-truncate"
+							style={{ maxWidth: "130px" }}
+						>
+							{admin.fullname}
+						</p>
+						<p
+							className="m-0"
+							style={{ cursor: "pointer", fontSize: "14px" }}
+							onClick={onLogout}
+						>
+							Logout
+						</p>
+					</div>
+				</SidebarHeader>
+				<SidebarContent className="py-4 h-100">
+					<Menu iconShape="circle">
+						<MenuItem
+							active={router.pathname === "/admins"}
+							icon={<Icon icon="akar-icons:person" />}
+							hidden={!admin.is_super_admin}
+						>
+							<Link href={"/admins"}>Admins</Link>
 						</MenuItem>
-						<MenuItem active={router.pathname === "/transactions/memberships"}>
-							<Link href={"/transactions/memberships"}>Memberships</Link>
+						<MenuItem
+							active={router.pathname === "/classes"}
+							icon={<Icon icon="ic:baseline-schedule" />}
+							hidden={!admin.is_super_admin}
+						>
+							<Link href={"/classes"}>Classes</Link>
 						</MenuItem>
-					</SubMenu>
-					<MenuItem
-						active={router.pathname === "/videos"}
-						icon={<Icon icon="ant-design:video-camera-outlined" />}
-						hidden={!admin.is_super_admin}
-					>
-						<Link href={"/videos"}>Videos</Link>
-					</MenuItem>
-				</Menu>
-			</SidebarContent>
-		</ProSidebar>
+
+						<MenuItem
+							active={router.pathname === "/memberships"}
+							icon={<Icon icon="ic:baseline-card-membership" />}
+							hidden={!admin.is_super_admin}
+						>
+							<Link href={"/memberships"}>Memberships</Link>
+						</MenuItem>
+
+						<MenuItem
+							active={router.pathname === "/newsletters"}
+							icon={<Icon icon="fluent:news-16-regular" />}
+							hidden={!admin.is_super_admin}
+						>
+							<Link href={"/newsletters"}>Newsletters</Link>
+						</MenuItem>
+						<SubMenu title="Transactions" icon={<Icon icon="carbon:receipt" />}>
+							<MenuItem active={router.pathname === "/transactions/classes"}>
+								<Link href={"/transactions/classes"}>Classes</Link>
+							</MenuItem>
+							<MenuItem
+								active={router.pathname === "/transactions/memberships"}
+							>
+								<Link href={"/transactions/memberships"}>Memberships</Link>
+							</MenuItem>
+						</SubMenu>
+						<MenuItem
+							active={router.pathname === "/videos"}
+							icon={<Icon icon="ant-design:video-camera-outlined" />}
+							hidden={!admin.is_super_admin}
+						>
+							<Link href={"/videos"}>Videos</Link>
+						</MenuItem>
+					</Menu>
+				</SidebarContent>
+			</ProSidebar>
+		</div>
 	);
 }

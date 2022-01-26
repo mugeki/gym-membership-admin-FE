@@ -128,13 +128,13 @@ export default function ClassFormModal({
 			delete formData.index;
 			formData.price = parseInt(formData.price);
 			formData.kuota = parseInt(formData.kuota);
-			delete formData.weeks;
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
 			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				formData.date = newDateList(formData.date, formData.weeks);
+				delete formData.weeks;
 				axios
 					.post(
 						`${API_URL}/classes`,
@@ -239,7 +239,7 @@ export default function ClassFormModal({
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="trainer"
+							name="trainer_id"
 							value={form.trainer_id}
 							onChange={onChange}
 						>
@@ -282,7 +282,7 @@ export default function ClassFormModal({
 						<Form.Control
 							type="number"
 							placeholder=" "
-							min={1}
+							min={0}
 							name="kuota"
 							value={form.kuota}
 							onChange={onChange}

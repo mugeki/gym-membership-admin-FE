@@ -2,7 +2,7 @@
 	"name": "gym-membership-admin",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "next dev -p 80",
 		"build": "next build",
 		"start": "next start -p 80",
 		"lint": "next lint"

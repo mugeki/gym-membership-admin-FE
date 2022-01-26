@@ -2,14 +2,8 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import Image from "next/image";
 import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-	generateAxiosConfig,
-	handleDate,
-	handleLowerCase,
-	handleUnauthorized,
-} from "../../utils/helper";
+import { generateAxiosConfig, handleUnauthorized } from "../../utils/helper";
 import DateList from "./DateList";
 
 export default function TableClass({
@@ -18,7 +12,6 @@ export default function TableClass({
 	onShowModal,
 	refetch,
 }) {
-	// const admin = useSelector((state) => state.admin);
 	const onDelete = (id) => {
 		const API_URL = process.env.BE_API_URL;
 		axios
