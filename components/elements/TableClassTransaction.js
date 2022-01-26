@@ -60,7 +60,7 @@ export default function TableClassTransaction({
 								User ID: {item.user_id}
 							</p>
 						</td>
-						<td>{item.class_name}</td>
+						<td>{item.product_name}</td>
 						<td>{handleDate(item.created_at)}</td>
 						<td>{item.payment.name}</td>
 						<td>
