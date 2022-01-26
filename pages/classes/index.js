@@ -85,7 +85,7 @@ export default function Classes() {
 	return (
 		<Layout>
 			<Head>
-				<title>Classes | Alta2Gym Admin Dashboard</title>
+				<title>Classes | Gymbro Admin Dashboard</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<ClassFormModal

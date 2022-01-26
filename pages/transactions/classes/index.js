@@ -109,7 +109,7 @@ export default function ClassTransactions() {
 	return (
 		<Layout>
 			<Head>
-				<title>Class Transactions | Alta2Gym Admin Dashboard</title>
+				<title>Class Transactions | Gymbro Admin Dashboard</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<div className="d-flex flex-column mx-auto w-100 p-5 justify-content-start">

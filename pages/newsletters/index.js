@@ -84,7 +84,7 @@ export default function Newsletters() {
 	return (
 		<Layout>
 			<Head>
-				<title>Newsletters | Alta2Gym Admin Dashboard</title>
+				<title>Newsletters | Gymbro Admin Dashboard</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<NewsletterFormModal

@@ -62,7 +62,7 @@ export default function TableMembershipTransaction({
 						</td>
 						<td>{item.product_name}</td>
 						<td>{handleDate(item.created_at)}</td>
-						<td>dummy payment</td>
+						<td>{item.payment.name}</td>
 						<td>
 							<a href={""} target="_blank" rel="noreferrer">
 								View

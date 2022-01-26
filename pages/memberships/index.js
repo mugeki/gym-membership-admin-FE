@@ -75,7 +75,7 @@ export default function Memberships() {
 	return (
 		<Layout>
 			<Head>
-				<title>Memberships | Alta2Gym Admin Dashboard</title>
+				<title>Memberships | Gymbro Admin Dashboard</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<MembershipFormModal

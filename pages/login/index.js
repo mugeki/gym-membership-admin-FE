@@ -55,7 +55,7 @@ export default function Login() {
 			className={`${container} box d-flex flex-column border rounded px-4 py-5 position-absolute top-50 start-50 translate-middle`}
 		>
 			<Head>
-				<title>Login | Alta2Gym Admin Dashboard</title>
+				<title>Login | Gymbro Admin Dashboard</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<h4 className="fw-bolder text-center text-primary mb-4">Admin Login</h4>
