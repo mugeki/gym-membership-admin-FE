@@ -92,6 +92,7 @@ export default function NewsletterFormModal({
 			const formData = { ...form };
 			delete formData.id;
 			delete formData.index;
+			formData.classification_id = parseInt(formData.classification_id);
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}

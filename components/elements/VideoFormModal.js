@@ -87,6 +87,7 @@ export default function VideoFormModal({
 			setError(newErrors);
 		} else {
 			const formData = { ...form };
+			formData.classification_id = parseInt(formData.classification_id);
 			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				axios

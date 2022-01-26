@@ -128,6 +128,7 @@ export default function ClassFormModal({
 			delete formData.index;
 			formData.price = parseInt(formData.price);
 			formData.kuota = parseInt(formData.kuota);
+			formData.trainer_id = parseInt(formData.trainer_id);
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
@@ -282,7 +283,6 @@ export default function ClassFormModal({
 						<Form.Control
 							type="number"
 							placeholder=" "
-							min={0}
 							name="kuota"
 							value={form.kuota}
 							onChange={onChange}
@@ -298,7 +298,6 @@ export default function ClassFormModal({
 						<Form.Control
 							type="number"
 							placeholder="Price"
-							min={0}
 							name="price"
 							value={form.price}
 							onChange={onChange}
