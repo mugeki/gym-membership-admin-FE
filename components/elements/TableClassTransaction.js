@@ -16,7 +16,7 @@ export default function TableClassTransaction({
 }) {
 	const admin = useSelector((state) => state.admin);
 	const onAction = (index, id, status, admin_id) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.put(
 				`${API_URL}/transaction-class/update-status/${id}?status=${status}&admin=${admin_id}`,
@@ -60,9 +60,9 @@ export default function TableClassTransaction({
 								User ID: {item.user_id}
 							</p>
 						</td>
-						<td>{item.class_name}</td>
+						<td>{item.product_name}</td>
 						<td>{handleDate(item.created_at)}</td>
-						<td>dummy payment</td>
+						<td>{item.payment.name}</td>
 						<td>
 							<a href={""} target="_blank" rel="noreferrer">
 								View

@@ -6,6 +6,7 @@ import axios from "axios";
 import VideoFormModal from "../../components/elements/VideoFormModal";
 import TableVideo from "../../components/elements/TableVideo";
 import { Icon } from "@iconify/react";
+import Head from "next/head";
 
 export default function Videos() {
 	const [modalShow, setModalShow] = useState(false);
@@ -19,7 +20,7 @@ export default function Videos() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page, title) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(
 				`${API_URL}/videos?title=${title}&page=${page}`,
@@ -82,6 +83,10 @@ export default function Videos() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Videos | Gymbro Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<VideoFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}

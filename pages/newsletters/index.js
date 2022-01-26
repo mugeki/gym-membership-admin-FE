@@ -6,6 +6,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import TableNewsletter from "../../components/elements/TableNewsletter";
 import NewsletterFormModal from "../../components/elements/NewsletterFormModal";
+import Head from "next/head";
 
 export default function Newsletters() {
 	const [modalShow, setModalShow] = useState(false);
@@ -19,7 +20,7 @@ export default function Newsletters() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page, title) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(
 				`${API_URL}/articles?title=${title}&page=${page}`,
@@ -82,6 +83,10 @@ export default function Newsletters() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Newsletters | Gymbro Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<NewsletterFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}

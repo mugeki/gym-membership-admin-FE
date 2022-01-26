@@ -6,6 +6,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import TableAdmin from "../../components/elements/TableAdmin";
 import AdminFormModal from "../../components/elements/AdminFormModal";
+import Head from "next/head";
 
 export default function Admins() {
 	const [modalShow, setModalShow] = useState(false);
@@ -19,7 +20,7 @@ export default function Admins() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page, name) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/admins?name=${name}&page=${page}`, generateAxiosConfig())
 			.then((res) => {
@@ -79,6 +80,10 @@ export default function Admins() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Admins | Gymbro Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<AdminFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}

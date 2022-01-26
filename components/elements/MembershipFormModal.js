@@ -65,7 +65,7 @@ export default function MembershipFormModal({
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				axios
 					.post(
@@ -157,7 +157,6 @@ export default function MembershipFormModal({
 						<Form.Control
 							type="number"
 							placeholder="Price"
-							min={0}
 							name="price"
 							value={form.price}
 							onChange={onChange}
@@ -172,7 +171,6 @@ export default function MembershipFormModal({
 						<Form.Control
 							type="number"
 							placeholder="Period"
-							min={0}
 							name="period_time"
 							value={form.period_time}
 							onChange={onChange}

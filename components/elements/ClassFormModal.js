@@ -52,7 +52,7 @@ export default function ClassFormModal({
 	const { newDateList } = useHandleDate();
 
 	useEffect(() => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/trainers`, generateAxiosConfig())
 			.then((res) => {
@@ -128,13 +128,14 @@ export default function ClassFormModal({
 			delete formData.index;
 			formData.price = parseInt(formData.price);
 			formData.kuota = parseInt(formData.kuota);
-			delete formData.weeks;
+			formData.trainer_id = parseInt(formData.trainer_id);
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_THUMB;
 			}
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				formData.date = newDateList(formData.date, formData.weeks);
+				delete formData.weeks;
 				axios
 					.post(
 						`${API_URL}/classes`,
@@ -239,7 +240,7 @@ export default function ClassFormModal({
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="trainer"
+							name="trainer_id"
 							value={form.trainer_id}
 							onChange={onChange}
 						>
@@ -282,7 +283,6 @@ export default function ClassFormModal({
 						<Form.Control
 							type="number"
 							placeholder=" "
-							min={1}
 							name="kuota"
 							value={form.kuota}
 							onChange={onChange}
@@ -298,7 +298,6 @@ export default function ClassFormModal({
 						<Form.Control
 							type="number"
 							placeholder="Price"
-							min={0}
 							name="price"
 							value={form.price}
 							onChange={onChange}

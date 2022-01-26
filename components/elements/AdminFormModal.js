@@ -81,7 +81,7 @@ export default function AdminFormModal({
 			if (formData.url_image === "") {
 				formData.url_image = process.env.DEFAULT_PROFILE;
 			}
-			const API_URL = process.env.BE_API_URL_LOCAL;
+			const API_URL = process.env.BE_API_URL;
 			if (action === "add") {
 				axios
 					.post(

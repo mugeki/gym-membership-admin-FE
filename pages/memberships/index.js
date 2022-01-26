@@ -6,6 +6,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import TableMembership from "../../components/elements/TableMembership";
 import MembershipFormModal from "../../components/elements/MembershipFormModal";
+import Head from "next/head";
 
 export default function Memberships() {
 	const [modalShow, setModalShow] = useState(false);
@@ -18,7 +19,7 @@ export default function Memberships() {
 	const [modalProps, setModalProps] = useState();
 
 	const fetch = (page) => {
-		const API_URL = process.env.BE_API_URL_LOCAL;
+		const API_URL = process.env.BE_API_URL;
 		axios
 			.get(`${API_URL}/membership-products?page=${page}`, generateAxiosConfig())
 			.then((res) => {
@@ -73,6 +74,10 @@ export default function Memberships() {
 
 	return (
 		<Layout>
+			<Head>
+				<title>Memberships | Gymbro Admin Dashboard</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
 			<MembershipFormModal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
