@@ -42,8 +42,9 @@ export default function TableMembershipTransaction({
 				<tr>
 					<th>ID</th>
 					<th>User</th>
-					<th>Membership</th>
+					<th>Class</th>
 					<th>Date</th>
+					<th>Total</th>
 					<th>Payment</th>
 					<th>Receipt</th>
 					<th>Status</th>
@@ -62,11 +63,20 @@ export default function TableMembershipTransaction({
 						</td>
 						<td>{item.product_name}</td>
 						<td>{handleDate(item.created_at)}</td>
+						<td>Rp{item.nominal.toLocaleString().replace(/,/g, ".")}</td>
 						<td>{item.payment.name}</td>
 						<td>
-							<a href={""} target="_blank" rel="noreferrer">
-								View
-							</a>
+							{item.url_image_of_receipt ? (
+								<a
+									href={item.url_image_of_receipt}
+									target="_blank"
+									rel="noreferrer"
+								>
+									View
+								</a>
+							) : (
+								"No receipt"
+							)}
 						</td>
 						<td>
 							<div

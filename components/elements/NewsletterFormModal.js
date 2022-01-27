@@ -187,7 +187,7 @@ export default function NewsletterFormModal({
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="title"
+							name="classification_id"
 							value={form.classification_id}
 							onChange={onChange}
 						>

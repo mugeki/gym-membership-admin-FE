@@ -179,7 +179,7 @@ export default function VideoFormModal({
 						<Form.Select
 							type="text"
 							placeholder=" "
-							name="classification"
+							name="classification_id"
 							value={form.classification_id}
 							onChange={onChange}
 						>
