@@ -333,7 +333,6 @@ export default function ClassFormModal({
 								<Form.Control
 									type="number"
 									placeholder="ex: 4"
-									min={1}
 									name="weeks"
 									value={form.weeks}
 									onChange={onChange}
