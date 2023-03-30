@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker Image
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         env:
           NEXT_PUBLIC_BE_API_URL: ${{ secrets.BE_API_URL }}
           NEXT_PUBLIC_DEFAULT_PROFILE: ${{ secrets.DEFAULT_PROFILE }}
